@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<%= erb :_head, locals: { copy: @copy } %>
+
+<body>
+    <button onclick="window.location = '/logout'">Logout</button>
+    <button onclick="window.location = '/upload?d=<%= key.join(DIR_DELIMITER) %>'">Upload</button>
+    <table>
+        <% unless key.size == 0 %>
+            <tr>
+                <td>
+                    <% d = key[0..-2].join(DIR_DELIMITER) %>
+                    <a href="/?d=<%= d %>">..</a>
+                </td>
+            </tr>
+        <% end %>
+        <% file_tree.each do |branch| %>
+            <%
+                if branch.is_a?(String)
+                    # File
+                    href = '/download/' + (key.empty? ? '' : key.join('/') + '/') + branch
+                else
+                    # Dir
+                    branch = branch.keys[0]
+                    d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
+                    href = '/?d=' + d
+                end
+            %>
+            <tr>
+                <td>
+                    <a href="<%= href %>"><%= branch %></a>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+</body>
+
+</html>

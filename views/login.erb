@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <input id="password" password>
+    <button onclick="submitAttempt()">Submit</button>
+</body>
+
+<script>
+    var submitAttempt = () => {
+        const password = document.getElementById('password').value
+        fetch('/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({ password: password })
+        }).then(res => {
+            if (res.status == 200) {
+                document.location.href = '/'
+            } else {
+                window.location.reload()
+            }
+        })
+    }
+</script>
+
+</html>

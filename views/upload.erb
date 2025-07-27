@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<%= erb :_head, locals: { copy: @copy } %>
+
+<% query = '' %>
+<% query = "?d=#{key.join(DIR_DELIMITER)}" if key %>
+<% post_uri = '/upload' + query %>
+
+<body>
+    <button onclick="window.location = '/logout'">Logout</button>
+    <div class="upload-form">
+    <form action="<%= post_uri %>" method="post" enctype="multipart/form-data">
+        <h3>Choose a file to upload</h3>
+        <input type="file" name="file" required>
+        <br>
+        <input type="submit" value="Upload File">
+    </form>
+  </div>
+</body>
+
+</html>

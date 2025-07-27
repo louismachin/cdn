@@ -1,0 +1,10 @@
+<link rel="icon" type="image/png" href="/img/favicon_light.png" media="(prefers-color-scheme: light)">
+<link rel="icon" type="image/png" href="/img/favicon_dark.png"  media="(prefers-color-scheme: dark)">
+<script>
+    const favicon_dom = document.querySelector('link[rel="icon"]')
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    mediaQuery.addEventListener('change', (event) => {
+        let name = event.matches ? 'favicon_dark.png' : 'favicon_light.png'
+        favicon_dom.setAttribute('href', '/img/' + name)
+    })
+</script>
