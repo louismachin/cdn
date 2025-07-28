@@ -22,14 +22,17 @@ download_file = proc do
     if File.file?(full_path)
         send_file full_path
     elsif File.directory?(full_path)
+        puts "Serving directory \"#{full_path}\"..."
         require 'tempfile'
         require 'zlib'
         begin
             temp_file = Tempfile.new(['temp', '.tar.gz'])
             dirname = File.dirname(full_path)
             basename = File.basename(full_path)
+            puts "Starting tar..."
             system("tar -czf #{temp_file.path} -C #{dirname} #{basename}")
             content_type 'application/gzip'
+            puts "Sending file..."
             attachment "#{basename}.tar.gz"
             send_file temp_file.path
         ensure
