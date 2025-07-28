@@ -1,4 +1,4 @@
-download_file = proc do
+old_download_file = proc do
     protected!
     file_path = params['splat'][0]
     full_path = File.join('data', file_path)
@@ -6,6 +6,38 @@ download_file = proc do
         send_file full_path
     else
         halt 404, "File not found"
+    end
+end
+
+download_file = proc do
+    protected!
+
+    file_path = params['splat'][0]
+    full_path = File.join('data', file_path)
+
+    unless File.exist?(full_path)
+        halt 404, "File or directory not found"
+    end
+
+    if File.file?(full_path)
+        send_file full_path
+    elsif File.directory?(full_path)
+        require 'tempfile'
+        require 'zlib'
+        begin
+            temp_file = Tempfile.new(['temp', '.tar.gz'])
+            dirname = File.dirname(full_path)
+            basename = File.basename(full_path)
+            system("tar -czf #{temp_file.path} -C #{dirname} #{basename}")
+            content_type 'application/gzip'
+            attachment "#{basename}.tar.gz"
+            send_file temp_file.path
+        ensure
+            temp_file.close
+            temp_file.unlink
+        end
+    else
+        halt 400, "Invalid file type"
     end
 end
 
