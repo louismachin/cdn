@@ -26,15 +26,17 @@ download_file = proc do
         require 'tempfile'
         require 'zlib'
         begin
-            temp_file = Tempfile.new(['temp', '.tar.gz'])
-            dirname = File.dirname(full_path)
-            basename = File.basename(full_path)
-            puts "Starting tar..."
-            system("tar -czf #{temp_file.path} -C #{dirname} #{basename}")
+            archive_name = "#{File.basename(file_path)}_#{Time.now.to_i}.tar.gz"
+            archive_path = File.join('/tmp', archive_name)
+            
+            puts "Creating archive: #{archive_path}"
+            system("tar -czf #{archive_path} -C #{File.dirname(full_path)} #{File.basename(full_path)}")
+            
             content_type 'application/gzip'
-            puts "Sending file..."
-            attachment "#{basename}.tar.gz"
-            send_file temp_file.path
+            attachment "#{File.basename(file_path)}.tar.gz"
+            
+            puts "Sending file: #{archive_path}"
+            send_file archive_path
         ensure
             temp_file.close
             temp_file.unlink
