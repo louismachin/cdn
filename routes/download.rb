@@ -22,25 +22,17 @@ download_file = proc do
     if File.file?(full_path)
         send_file full_path
     elsif File.directory?(full_path)
-        puts "Serving directory \"#{full_path}\"..."
-        require 'tempfile'
-        require 'zlib'
-        begin
-            archive_name = "#{File.basename(file_path)}_#{Time.now.to_i}.tar.gz"
-            archive_path = File.join('/tmp', archive_name)
-            
-            puts "Creating archive: #{archive_path}"
-            system("tar -czf #{archive_path} -C #{File.dirname(full_path)} #{File.basename(full_path)}")
-            
-            content_type 'application/gzip'
-            attachment "#{File.basename(file_path)}.tar.gz"
-            
-            puts "Sending file: #{archive_path}"
-            send_file archive_path
-        ensure
-            temp_file.close
-            temp_file.unlink
-        end
+        archive_name = "#{File.basename(file_path)}_#{Time.now.to_i}.tar.gz"
+        archive_path = File.join('/tmp', archive_name)
+
+        puts "Creating archive: #{archive_path}"
+        system("tar -czf #{archive_path} -C #{File.dirname(full_path)} #{File.basename(full_path)}")
+
+        content_type 'application/gzip'
+        attachment "#{File.basename(file_path)}.tar.gz"
+
+        puts "Sending file: #{archive_path}"
+        send_file archive_path
     else
         halt 400, "Invalid file type"
     end
