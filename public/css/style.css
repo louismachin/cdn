@@ -22,15 +22,6 @@ table#files {
     border-collapse: collapse;
 }
 
-table#files td {
-}
-
-table#files a {
-    color: inherit;
-    text-decoration: none;
-    cursor: crosshair;
-}
-
 div.buttons {
     display: flex;
     flex-direction: row;
@@ -46,6 +37,12 @@ div.buttons button {
 
 .mb {
     margin-bottom: 8px;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: crosshair;
 }
 
 button,
