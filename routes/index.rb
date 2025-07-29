@@ -11,7 +11,8 @@ get '/' do
 end
 
 get '/help' do
-    redirect '/'
+    @copy = $env.default_copy
+    erb :help, locals: { copy: @copy }
 end
 
 get '/robots.txt' do
