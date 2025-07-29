@@ -53,4 +53,5 @@ input[type="submit"],
 input[type="file"],
 input[type="file"]::file-selector-button {
     border-radius: 0;
+    cursor: crosshair;
 }
