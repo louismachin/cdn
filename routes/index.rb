@@ -9,3 +9,11 @@ get '/' do
         key: @key,
     }
 end
+
+get '/robots.txt' do
+    content_type 'text/plain'
+    <<~ROBOTS
+        User-agent: *
+        Disallow: /
+    ROBOTS
+end
