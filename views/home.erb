@@ -7,37 +7,7 @@
 <body>
     <button onclick="window.location = '/logout'">Logout</button>
     <button onclick="window.location = '/upload?d=<%= key.join(DIR_DELIMITER) %>'">Upload</button>
-    <table>
-        <% unless key.size == 0 %>
-            <tr>
-                <td>
-                    <% d = key[0..-2].join(DIR_DELIMITER) %>
-                    <a href="/?d=<%= d %>">..</a>
-                </td>
-            </tr>
-        <% end %>
-        <% file_tree.each do |branch| %>
-            <%
-                if branch.is_a?(String)
-                    all_segments = key.empty? ? [branch] : key + [branch]
-                    encoded_segments = all_segments.map do |segment|
-                        URI.encode_www_form_component(segment)
-                    end
-                    href = '/download/' + encoded_segments.join('/')
-                else
-                    # Dir
-                    branch = branch.keys[0]
-                    d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
-                    href = '/?d=' + URI.encode_www_form_component(d)
-                end
-            %>
-            <tr>
-                <td>
-                    <a href="<%= href %>"><%= branch %></a>
-                </td>
-            </tr>
-        <% end %>
-    </table>
+    <%= erb :_files, locals: { file_tree: @file_tree, key: @key } %>
 </body>
 
 </html>
