@@ -1,7 +1,7 @@
 download_file = proc do
     protected!
 
-    file_path = params['splat'][0]
+    file_path = URI.decode_www_form_component(params['splat'][0])
     full_path = File.join('data', file_path)
 
     unless File.exist?(full_path)
