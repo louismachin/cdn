@@ -20,6 +20,9 @@ div#page {
 
 table#files {
     border-collapse: collapse;
+}
+
+table#files a {
     text-decoration: none;
 }
 
