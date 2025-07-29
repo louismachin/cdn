@@ -36,8 +36,12 @@ post '/login' do
 end
 
 get '/logout' do
+  puts "Request host: #{request.host_with_port}"
+  puts "Request scheme: #{request.scheme}"
   token = request.cookies[$env.cookie_name]
   $env.given_tokens.delete(token) if token
   response.delete_cookie($env.cookie_name, path: '/')
-  redirect '/'
+  redirect_url = "#{request.scheme}://#{request.host_with_port}/"
+  puts "Redirecting to: #{redirect_url}"
+  redirect redirect_url
 end
