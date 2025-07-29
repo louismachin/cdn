@@ -20,7 +20,6 @@ end
 
 post '/login' do
   data = JSON.parse(request.body.read)
-  puts data.inspect
   attempt = { username: data['username'], password: data['password'] }
   if is_valid_attempt?(attempt)
     token = $env.new_token
