@@ -1,11 +1,11 @@
 download_file = proc do
-    protected!
-
     file_path = URI.decode_www_form_component(params['splat'][0])
     full_path = File.join('data', file_path)
 
     initial_dir = file_path.split('/')[0]
     puts "initial_dir=#{initial_dir}"
+
+    protected! unless initial_dir == 'public'
     
     unless File.exist?(full_path)
         halt 404, "File or directory not found"
