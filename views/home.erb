@@ -2,6 +2,7 @@
 <html>
 
 <%= erb :_head, locals: { copy: @copy } %>
+<% require 'uri' %>
 
 <body>
     <button onclick="window.location = '/logout'">Logout</button>
@@ -18,13 +19,16 @@
         <% file_tree.each do |branch| %>
             <%
                 if branch.is_a?(String)
-                    # File
-                    href = '/download/' + (key.empty? ? '' : key.join('/') + '/') + branch
+                    all_segments = key.empty? ? [branch] : key + [branch]
+                    encoded_segments = all_segments.map do |segment|
+                        URI.encode_www_form_component(segment)
+                    end
+                    href = '/download/' + encoded_segments.join('/')
                 else
                     # Dir
                     branch = branch.keys[0]
                     d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
-                    href = '/?d=' + d
+                    href = '/?d=' + URI.encode_www_form_component(d) if d.match?(/[#%&+]/) # Encode dir param if needed
                 end
             %>
             <tr>
