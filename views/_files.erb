@@ -1,4 +1,4 @@
-<table>
+<table id="files">
     <% unless key.size == 0 %>
         <tr>
             <td>
@@ -9,18 +9,25 @@
     <% end %>
     <% file_tree.each do |branch| %>
         <%
-            if branch.is_a?(String)
-                all_segments = key.empty? ? [branch] : key + [branch]
-                encoded_segments = all_segments.map do |segment|
-                    URI.encode_www_form_component(segment)
-                end
-                href = '/download/' + encoded_segments.join('/')
-            else
-                # Dir
-                branch = branch.keys[0]
-                d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
-                href = '/?d=' + URI.encode_www_form_component(d)
+            next if branch.is_a?(String)
+            branch = branch.keys[0]
+            d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
+            href = '/?d=' + URI.encode_www_form_component(d)
+        %>
+        <tr>
+            <td>
+                <a href="<%= href %>">🗀 <%= branch %></a>
+            </td>
+        </tr>
+    <% end %>
+    <% file_tree.each do |branch| %>
+        <%
+            next unless branch.is_a?(String)
+            all_segments = key.empty? ? [branch] : key + [branch]
+            encoded_segments = all_segments.map do |segment|
+                URI.encode_www_form_component(segment)
             end
+            href = '/download/' + encoded_segments.join('/')
         %>
         <tr>
             <td>

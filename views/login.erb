@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-</head>
+<%= erb :_head, locals: { copy: @copy } %>
 
 <body>
-    <input id="password" password>
-    <button onclick="submitAttempt()">Submit</button>
+    <div id="page">
+        <input class="mb" id="username">
+        <input class="mb" id="password" type="password">
+        <div class="buttons">
+            <button onclick="submitAttempt()">Submit</button>
+            <button onclick="">Help</button>
+        </div>
+    </div>
 </body>
 
 <script>
     var submitAttempt = () => {
+        const username = document.getElementById('username').value
         const password = document.getElementById('password').value
         fetch('/login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({ password: password })
+            body: JSON.stringify({
+                username: username,
+                password: password,
+            })
         }).then(res => {
             if (res.status == 200) {
                 document.location.href = '/'

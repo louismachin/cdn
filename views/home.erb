@@ -5,9 +5,13 @@
 <% require 'uri' %>
 
 <body>
-    <button onclick="window.location = '/logout'">Logout</button>
-    <button onclick="window.location = '/upload?d=<%= key.join(DIR_DELIMITER) %>'">Upload</button>
-    <%= erb :_files, locals: { file_tree: @file_tree, key: @key } %>
+    <div id="page">
+        <div class="buttons mb">
+            <button onclick="window.location = '/logout'">Logout</button>
+            <button onclick="window.location = '/upload?d=<%= key.join(DIR_DELIMITER) %>'">Upload</button>
+        </div>
+        <%= erb :_files, locals: { file_tree: @file_tree, key: @key } %>
+    </div>
 </body>
 
 </html>
