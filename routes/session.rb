@@ -21,7 +21,7 @@ end
 post '/login' do
   data = JSON.parse(request.body.read)
   puts data.inspect
-  attempt = { password: data['password'] }
+  attempt = { username: data['username'], password: data['password'] }
   if is_valid_attempt?(attempt)
     token = $env.new_token
     response.set_cookie($env.cookie_name, value: token, path: '/', max_age: '3600')

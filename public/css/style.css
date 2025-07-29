@@ -12,7 +12,6 @@ body {
 div#page {
     display: flex;
     flex-direction: column;
-    min-width: 240px;
     padding: 16px;
     background-color: white;
     box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
@@ -42,4 +41,11 @@ div.buttons button {
 
 .mb {
     margin-bottom: 8px;
+}
+
+button,
+input[type="submit"],
+input[type="file"],
+input[type="file"]::file-selector-button {
+    border-radius: 0;
 }

@@ -32,11 +32,11 @@ class Environment
         @given_tokens << token
         return token
     end
-
     
     def check_attempt(attempt)
-        puts attempt.inspect
-        return attempt[:password] == @data.dig('password')
+        username, password = attempt[:username], attempt[:password]
+        user = @data.dig('users', username)
+        return user && (user['password'] == password)
     end
 end
 

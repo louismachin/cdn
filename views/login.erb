@@ -5,16 +5,20 @@
 
 <body>
     <div id="page">
-        <input class="mb" id="username">
-        <input class="mb" id="password" type="password">
+        <input class="mb" id="username" placeholder="Username...">
+        <input class="mb" id="password" placeholder="Password..." type="password">
         <div class="buttons">
             <button onclick="submitAttempt()">Submit</button>
-            <button onclick="">Help</button>
+            <button onclick="window.location ='/help'">Help</button>
         </div>
     </div>
 </body>
 
 <script>
+    document.getElementById('password').onkeypress = (event) => {
+        if (event.key === 'Enter') submitAttempt()
+    }
+
     var submitAttempt = () => {
         const username = document.getElementById('username').value
         const password = document.getElementById('password').value

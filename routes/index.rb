@@ -10,6 +10,10 @@ get '/' do
     }
 end
 
+get '/help' do
+    redirect '/'
+end
+
 get '/robots.txt' do
     content_type 'text/plain'
     <<~ROBOTS
