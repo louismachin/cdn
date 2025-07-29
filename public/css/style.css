@@ -20,6 +20,7 @@ div#page {
 
 table#files {
     border-collapse: collapse;
+    text-decoration: none;
 }
 
 div.buttons {
@@ -41,7 +42,6 @@ div.buttons button {
 
 a {
     color: inherit;
-    text-decoration: none;
     cursor: crosshair;
 }
 
