@@ -28,7 +28,7 @@
                     # Dir
                     branch = branch.keys[0]
                     d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
-                    href = '/?d=' + URI.encode_www_form_component(d) if d.match?(/[#%&+]/) # Encode dir param if needed
+                    href = '/?d=' + URI.encode_www_form_component(d)
                 end
             %>
             <tr>
