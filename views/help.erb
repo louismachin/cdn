@@ -4,9 +4,23 @@
 <%= erb :_head, locals: { copy: @copy } %>
 
 <body>
-    <div id="page">
-        <p>Work in progress...</p>
+    <div id="page" class="help">
+        <p class="mb">This app is developed by <a href="https://louismachin.com">Louis Machin</a>.<br>The repository is available on <a href="https://github.com/louismachin/cdn">GitHub</a>.</p>
+        <div class="buttons mt">
+            <button onclick="window.location = '/login'">Back</button>
+        </div>
     </div>
 </body>
+
+<style>
+    .help p {
+        padding: 0;
+        margin: 0;
+    }
+
+    .help a {
+        color: inherit;
+    }
+</style>
 
 </html>
