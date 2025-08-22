@@ -6,13 +6,15 @@ get '/list/*' do
 
     protected! unless is_public
 
+    is_success, files = false, []
+
     if File.directory?(full_path)
-        search_path = APP_ROOT + '/' + full_path + '/*'
-        puts search_path
-        files = Dir[search_path]
-            .map { |dir| dir.gsub(APP_ROOT + '/' + full_path + '/', '') }
-        { success: true, files: files }.to_json
-    else
-        { success: false, files: [] }.to_json
+        is_success = true
+        search_str = APP_ROOT + '/' + full_path + '/'
+        files = Dir[search_str + '*']
+            .map { |dir| dir.gsub(search_str, '') }
     end
+    
+    content_type 'application/json'
+    { success: is_success, files: files }.to_json
 end
