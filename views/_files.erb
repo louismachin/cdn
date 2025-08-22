@@ -3,8 +3,11 @@
         <tr>
             <td>
                 <% 
-                    d = key[0..-2].join('/')
-                    href = '/view/' + URI.encode_www_form_component(d)
+                    new_key = key[0..-2]
+                    dir = new_key
+                        .map { |k| URI.encode_www_form_component(k) }
+                        .join('/')
+                    href = '/view/' + dir
                 %>
                 <a href="<%= href %>">&#128193; ..</a>
             </td>
@@ -14,8 +17,11 @@
         <%
             next if branch.is_a?(String)
             branch = branch.keys[0]
-            d = key.size == 0 ? branch : (key + [branch]).join('/')
-            href = '/view/' + URI.encode_www_form_component(d)
+            new_key = key.size == 0 ? branch : (key + [branch])
+            dir = new_key
+                .map { |k| URI.encode_www_form_component(k) }
+                .join('/')
+            href = '/view/' + dir
         %>
         <tr>
             <td>
