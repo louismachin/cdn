@@ -17,7 +17,7 @@
         <%
             next if branch.is_a?(String)
             branch = branch.keys[0]
-            new_key = key.size == 0 ? branch : (key + [branch])
+            new_key = key.size == 0 ? [branch] : (key + [branch])
             dir = new_key
                 .map { |k| URI.encode_www_form_component(k) }
                 .join('/')
