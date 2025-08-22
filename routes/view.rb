@@ -1,3 +1,15 @@
+get '/view' do
+    protected!
+    @copy = $env.default_copy
+    @key = []
+    @file_tree = get_file_tree(@key)
+    erb :home, locals: {
+        copy: @copy,
+        file_tree: @file_tree,
+        key: @key,
+    }
+end
+
 get '/view/*' do
     protected!
     @copy = $env.default_copy
