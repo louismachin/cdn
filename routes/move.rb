@@ -12,7 +12,7 @@ get '/delete/*' do
     end
 
     # Create trash directory if it doesn't exist
-    trash_dir = 'trash'
+    trash_dir = File.join('data', 'trash')
     Dir.mkdir(trash_dir) unless Dir.exist?(trash_dir)
 
     # Create new file
