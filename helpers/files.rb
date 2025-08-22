@@ -32,7 +32,7 @@ $cached_file_tree = nil
 
 def get_file_tree(key = nil)
     if $cached_file_tree && (!$cached_file_tree.expired?)
-        tree = $cached_file_tree.data.copy
+        tree = $cached_file_tree.data.clone
     else
         arr = Dir[APP_ROOT + '/data/**/*.*']
             .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
