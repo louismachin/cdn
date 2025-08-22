@@ -16,6 +16,7 @@ require_relative './helpers/files'
 
 require_relative './routes/session'
 require_relative './routes/index'
+require_relative './routes/view'
 require_relative './routes/upload'
 require_relative './routes/download'
 require_relative './routes/list'

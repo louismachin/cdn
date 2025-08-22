@@ -2,8 +2,11 @@
     <% unless key.size == 0 %>
         <tr>
             <td>
-                <% d = key[0..-2].join(DIR_DELIMITER) %>
-                <a href="/?d=<%= d %>">&#128193; ..</a>
+                <% 
+                    d = key[0..-2].join('/')
+                    href = '/view/' + URI.encode_www_form_component(d)
+                %>
+                <a href="<%= href %>">&#128193; ..</a>
             </td>
         </tr>
     <% end %>
@@ -11,8 +14,8 @@
         <%
             next if branch.is_a?(String)
             branch = branch.keys[0]
-            d = key.size == 0 ? branch : (key + [branch]).join(DIR_DELIMITER)
-            href = '/?d=' + URI.encode_www_form_component(d)
+            d = key.size == 0 ? branch : (key + [branch]).join('/')
+            href = '/view/' + URI.encode_www_form_component(d)
         %>
         <tr>
             <td>
