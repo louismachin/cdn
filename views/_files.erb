@@ -36,11 +36,15 @@
             encoded_segments = all_segments.map do |segment|
                 URI.encode_www_form_component(segment)
             end
-            href = '/download/' + encoded_segments.join('/')
+            download_href = '/download/' + encoded_segments.join('/')
+            delete_href = '/delete/' + encoded_segments.join('/')
         %>
         <tr>
             <td>
-                <a href="<%= href %>"><%= branch %></a>
+                <a href="<%= download_href %>"><%= branch %></a>
+            </td>
+            <td>
+                <a href="<%= delete_href %>">&#128465;</a>
             </td>
         </tr>
     <% end %>
