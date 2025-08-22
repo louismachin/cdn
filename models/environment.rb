@@ -1,5 +1,11 @@
 ENV_FILE_PATH = 'environment.yml'
 
+Cache = Struct.new(:cached_at, :data, :expiry) do
+    def expired?
+        Time.now - cached_at > expiry
+    end
+end
+
 class Environment
     attr_reader :data
     attr_accessor :given_tokens

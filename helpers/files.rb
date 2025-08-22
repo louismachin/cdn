@@ -28,10 +28,17 @@ def get_branch(tree, dir)
     return []
 end
 
+$cached_file_tree = nil
+
 def get_file_tree(key = nil)
-    arr = Dir[APP_ROOT + '/data/**/*.*']
-        .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
-    tree = array_to_nested_structure(arr)
+    if $cached_file_tree && (!$cached_file_tree.expired?)
+        tree = $cached_file_tree.data.copy
+    else
+        arr = Dir[APP_ROOT + '/data/**/*.*']
+            .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
+        tree = array_to_nested_structure(arr)
+        $cached_file_tree = Cache.new(Time.now, tree, 3600)
+    end
     unless key.nil?
         key.each do |dir|
             branch = get_branch(tree, dir)
