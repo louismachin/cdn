@@ -1,8 +1,8 @@
 <table id="files">
-    <% unless key.size == 0 %>
+    <% if (key.size > 0) && (!is_jailed) %>
         <tr>
             <td>
-                <% 
+                <%
                     new_key = key[0..-2]
                     dir = new_key
                         .map { |k| URI.encode_www_form_component(k) }
