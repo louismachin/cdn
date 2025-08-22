@@ -25,8 +25,8 @@ end
 # end
 
 post '/upload/*' do
-    file_path = URI.decode_www_form_component(params['splat'][0])
-    initial_dir = file_path.split('/')[0]
+    directory_path = URI.decode_www_form_component(params['splat'][0])
+    initial_dir = directory_path.split('/')[0] if !directory_path.empty?
     is_public = initial_dir == 'public'
     protected! unless is_public
     
@@ -38,11 +38,12 @@ post '/upload/*' do
     uploaded_file = params[:file][:tempfile]
     filename = params[:file][:filename]
     
-    # Create the full path where the file will be saved
-    # Combine the directory path from splat with the filename
-    directory_path = file_path.empty? ? [] : file_path.split('/')
-    path_arr = directory_path + [filename]
-    full_path = File.join('data', *path_arr)
+    # Build the full path: directory from splat + actual filename
+    if directory_path.empty?
+        full_path = File.join('data', filename)
+    else
+        full_path = File.join('data', directory_path, filename)
+    end
     
     # Ensure the directory exists
     directory = File.dirname(full_path)

@@ -25,9 +25,8 @@
             return
         }
         
-        // Build the upload URI using the base path + filename
-        const baseUri = '<%= base_uri %>'
-        const uploadUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + encodeURIComponent(file.name)
+        // Use just the directory path, not including filename
+        const uploadUri = '<%= base_uri %>'
         
         // Create FormData
         const formData = new FormData()
