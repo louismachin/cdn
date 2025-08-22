@@ -1,21 +1,56 @@
 <!DOCTYPE html>
 <html>
-
 <%= erb :_head, locals: { copy: @copy } %>
-
-<% query = '' %>
-<% query = "?d=#{key.join(DIR_DELIMITER)}" if key %>
-<% post_uri = '/upload' + query %>
-
+<% base_uri = '/upload' %>
+<% base_uri += '/' + key.join('/') if key && !key.empty? %>
 <body>
     <div id="page">
         <div class="upload-form">
-            <form style="display: flex; flex-direction: column" action="<%= post_uri %>" method="post" enctype="multipart/form-data">
-                <input class="mb" type="file" name="file" required>
+            <form id="uploadForm" style="display: flex; flex-direction: column" enctype="multipart/form-data">
+                <input class="mb" type="file" name="file" id="fileInput" required>
                 <input type="submit" value="Upload File">
             </form>
         </div>
     </div>
 </body>
-
+<script>
+    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+        e.preventDefault()
+        
+        const fileInput = document.getElementById('fileInput')
+        const file = fileInput.files[0]
+        
+        if (!file) {
+            alert('Please select a file')
+            return
+        }
+        
+        // Build the upload URI using the base path + filename
+        const baseUri = '<%= base_uri %>'
+        const uploadUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + encodeURIComponent(file.name)
+        
+        // Create FormData
+        const formData = new FormData()
+        formData.append('file', file)
+        
+        // Upload the file
+        fetch(uploadUri, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Redirect back or reload
+                window.location.href = '/'
+            } else {
+                alert('Upload failed: ' + (data.error || 'Unknown error'))
+            }
+        })
+        .catch(error => {
+            console.error('Upload error:', error)
+            alert('Upload failed')
+        })
+    })
+</script>
 </html>
