@@ -12,7 +12,8 @@ get '/list/*' do
         is_success = true
         search_str = APP_ROOT + '/' + full_path + '/'
         files = Dir[search_str + '*']
-            .map { |dir| dir.gsub(search_str, '') }
+            .map { |path| File.directory?(path) ? path + '/' : path }
+            .map { |path| path.gsub(search_str, '') }
     end
     
     content_type 'application/json'
