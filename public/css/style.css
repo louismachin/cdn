@@ -9,7 +9,6 @@ body {
     background-color: rgb(240, 240, 240);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-
 div#page {
     display: flex;
     flex-direction: column;
@@ -17,41 +16,50 @@ div#page {
     background-color: white;
     box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
 }
-
 table#files {
     border-collapse: collapse;
 }
-
 table#files a {
     text-decoration: none;
 }
-
 div.buttons {
     display: flex;
     flex-direction: row;
 }
-
 div.buttons button {
     margin-right: 8px;
 }
-
 .mt {
     margin-top: 8px;
 }
-
 .mb {
     margin-bottom: 8px;
 }
 
-a {
+/* More specific cursor rules */
+a,
+a:hover,
+a:active,
+a:focus,
+a:visited {
     color: inherit;
     cursor: crosshair !important;
 }
 
 button,
+button:hover,
+button:active,
+button:focus,
 input[type="submit"],
+input[type="submit"]:hover,
+input[type="submit"]:active,
+input[type="submit"]:focus,
 input[type="file"],
-input[type="file"]::file-selector-button {
+input[type="file"]:hover,
+input[type="file"]:active,
+input[type="file"]:focus,
+input[type="file"]::file-selector-button,
+input[type="file"]::file-selector-button:hover {
     border-radius: 0;
-    cursor: crosshair;
+    cursor: crosshair !important;
 }
