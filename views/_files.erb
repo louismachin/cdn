@@ -44,7 +44,7 @@
                 <a href="<%= download_href %>"><%= branch %></a>
             </td>
             <td>
-                <a href="fetch('<%= delete_href %>')">&#128465;</a>
+                <a href="() => { fetch('<%= delete_href %>') }()">&#128465;</a>
             </td>
         </tr>
     <% end %>
