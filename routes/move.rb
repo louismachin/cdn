@@ -24,6 +24,7 @@ get '/delete/*' do
 
     begin
         FileUtils.mv(full_path, trash_path)
+        clear_file_tree_cache
         content_type 'application/json'
         status 200
         { :success => true, }.to_json
