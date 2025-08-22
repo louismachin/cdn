@@ -36,6 +36,33 @@ div.buttons button {
     margin-bottom: 8px;
 }
 
-body *:hover {
-    cursor: crosshair;
+a,
+a:hover,
+a:active,
+a:focus,
+a:visited,
+button,
+button:hover,
+button:active,
+button:focus,
+input[type="submit"],
+input[type="submit"]:hover,
+input[type="submit"]:active,
+input[type="submit"]:focus,
+input[type="file"],
+input[type="file"]:hover,
+input[type="file"]:active,
+input[type="file"]:focus,
+input[type="file"]::file-selector-button,
+input[type="file"]::file-selector-button:hover,
+div.buttons button,
+div.buttons button:hover,
+div.buttons button:active,
+div.buttons button:focus,
+table#files a,
+table#files a:hover,
+table#files a:active,
+table#files a:focus {
+    cursor: crosshair !important;
+    border-radius: 0;
 }
