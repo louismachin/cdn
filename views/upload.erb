@@ -14,23 +14,22 @@
     </div>
 </body>
 <script>
-    document.getElementById('uploadForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    document.getElementById('uploadForm').addEventListener('submit', (e) => {
+        e.preventDefault()
         
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
+        const fileInput = document.getElementById('fileInput')
+        const file = fileInput.files[0]
         
         if (!file) {
-            alert('Please select a file');
-            return;
+            alert('Please select a file')
+            return
         }
-        
-        // Use just the directory path, not including filename
-        const uploadUri = '<%= base_uri %>';
-        
+
+        const uploadUri = '<%= base_uri %>'
+
         // Create FormData
-        const formData = new FormData();
-        formData.append('file', file);
+        const formData = new FormData()
+        formData.append('file', file)
         
         // Upload the file
         fetch(uploadUri, {
@@ -38,33 +37,31 @@
             body: formData
         })
         .then(response => {
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers.get('content-type'));
-            
-            // Check if response is actually JSON
+            console.log('Response status:', response.status)
+            console.log('Response headers:', response.headers.get('content-type'))
+
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
-                return response.json();
+                return response.json()
             } else {
-                // If not JSON, get text to see what's actually returned
                 return response.text().then(text => {
-                    console.log('Non-JSON response:', text);
-                    throw new Error('Server returned non-JSON response: ' + text);
-                });
+                    console.log('Non-JSON response:', text)
+                    throw new Error('Server returned non-JSON response: ' + text)
+                })
             }
         })
         .then(data => {
             if (data.success) {
                 // Redirect back or reload
-                window.location.href = '/';
+                window.location.href = '/'
             } else {
-                alert('Upload failed: ' + (data.error || 'Unknown error'));
+                alert('Upload failed: ' + (data.error || 'Unknown error'))
             }
         })
         .catch(error => {
-            console.error('Upload error:', error);
-            alert('Upload failed: ' + error.message);
-        });
+            console.error('Upload error:', error)
+            alert('Upload failed: ' + error.message)
+        })
     })
 </script>
 </html>
