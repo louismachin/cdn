@@ -10,7 +10,7 @@
             <button onclick="window.location = '/logout'">Logout</button>
             <button onclick="window.location = '/upload?d=<%= key.join(DIR_DELIMITER) %>'">Upload</button>
         </div>
-        <%= erb :_files, locals: { file_tree: @file_tree, key: @key } %>
+        <%= erb :_files, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed, } %>
     </div>
 </body>
 
