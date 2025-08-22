@@ -1,8 +1,12 @@
-get '/upload' do
-    protected!
+get '/upload/?*' do
+    file_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
+    initial_dir = file_path.split('/')[0] if !file_path.empty?
+    is_public = initial_dir == 'public'
+    protected! unless is_public
+    
     @copy = $env.default_copy
-    @key = params[:d] ? params[:d].split(DIR_DELIMITER) : []
-    erb :upload, locals: { copy: @copy, key: @key, }
+    @key = file_path.empty? ? [] : file_path.split('/')
+    erb :upload, locals: { copy: @copy, key: @key }
 end
 
 # post '/upload' do
