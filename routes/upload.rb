@@ -20,5 +20,6 @@ post '/upload' do
     # Save the file
     File.open(file_path, 'wb') { |f| f.write(uploaded_file.read) }
     clear_file_tree_cache
-    { 'success' => true }.to_json
+    content_type 'application/json'
+    { :success => true }.to_json
 end
