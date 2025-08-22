@@ -1,18 +1,11 @@
-get '/upload' do
-    protected!
-    @copy = $env.default_copy
-    @key = []
-    erb :upload, locals: { copy: @copy, key: @key }
-end
-
-get '/upload/*' do
-    file_path = URI.decode_www_form_component(params['splat'][0])
+get '/upload/?*' do
+    file_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
     initial_dir = file_path.split('/')[0] if !file_path.empty?
     is_public = initial_dir == 'public'
     protected! unless is_public
-   
+    
     @copy = $env.default_copy
-    @key = file_path.split('/')
+    @key = file_path.empty? ? [] : file_path.split('/')
     erb :upload, locals: { copy: @copy, key: @key }
 end
 
@@ -35,12 +28,12 @@ end
 #     { :success => true }.to_json
 # end
 
-post '/upload/*' do
-    directory_path = URI.decode_www_form_component(params['splat'][0])
+post '/upload/?*' do
+    directory_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
     initial_dir = directory_path.split('/')[0] if !directory_path.empty?
     is_public = initial_dir == 'public'
     protected! unless is_public
-    
+
     unless params[:file] && params[:file][:tempfile]
         halt 400, { 'success' => false, 'error' => 'Missing required fields' }.to_json
     end
