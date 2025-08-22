@@ -30,6 +30,10 @@ end
 
 $cached_file_tree = nil
 
+def clear_file_tree_cache
+    $cached_file_tree = nil
+end
+
 def get_file_tree(key = nil)
     if $cached_file_tree && (!$cached_file_tree.expired?)
         puts "Using file tree cache..."
