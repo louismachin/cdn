@@ -36,30 +36,6 @@ div.buttons button {
     margin-bottom: 8px;
 }
 
-/* More specific cursor rules */
-a,
-a:hover,
-a:active,
-a:focus,
-a:visited {
-    color: inherit;
-    cursor: crosshair !important;
-}
-
-button,
-button:hover,
-button:active,
-button:focus,
-input[type="submit"],
-input[type="submit"]:hover,
-input[type="submit"]:active,
-input[type="submit"]:focus,
-input[type="file"],
-input[type="file"]:hover,
-input[type="file"]:active,
-input[type="file"]:focus,
-input[type="file"]::file-selector-button,
-input[type="file"]::file-selector-button:hover {
-    border-radius: 0;
-    cursor: crosshair !important;
+body *:hover {
+    cursor: crosshair;
 }
