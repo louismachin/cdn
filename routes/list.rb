@@ -10,7 +10,7 @@ get '/list/*' do
         search_path = APP_ROOT + '/' + full_path + '/*'
         puts search_path
         files = Dir[search_path]
-            .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
+            .map { |dir| dir.gsub(APP_ROOT + '/data/' + full_path + '/', '') }
         { success: true, files: files }.to_json
     else
         { success: false, files: [] }.to_json
