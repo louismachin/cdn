@@ -36,13 +36,11 @@ end
 
 def get_file_tree(key = nil)
     if $cached_file_tree && (!$cached_file_tree.expired?)
-        puts "Using file tree cache..."
         tree = $cached_file_tree.data.clone
     else
         arr = Dir[APP_ROOT + '/data/**/*.*']
             .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
         tree = array_to_nested_structure(arr)
-        puts "Built file tree cache..."
         $cached_file_tree = Cache.new(Time.now, tree, 3600)
     end
     unless key.nil?
