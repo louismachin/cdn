@@ -15,7 +15,9 @@ get '/list/*' do
             .map { |path| File.directory?(path) ? path + '/' : path }
             .map { |path| path.gsub(search_str, '') }
     end
-    
+
+    size = files.sum { |f| File.size(f) }
+
     content_type 'application/json'
-    { success: is_success, files: files }.to_json
+    { success: is_success, size: size, files: files }.to_json
 end
