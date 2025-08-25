@@ -12,11 +12,13 @@ get '/list/*' do
         is_success = true
         search_str = APP_ROOT + '/' + full_path + '/'
         files = Dir[search_str + '*']
+        size = files
+            .select { |f| File.file?(f) }
+            .sum { |f| File.size(f) }
+        files = files
             .map { |path| File.directory?(path) ? path + '/' : path }
             .map { |path| path.gsub(search_str, '') }
     end
-
-    size = files.sum { |f| File.size(f) }
 
     content_type 'application/json'
     { success: is_success, size: size, files: files }.to_json
