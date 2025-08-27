@@ -22,11 +22,12 @@ GET /list/home/user/downloads
 
 ### Response
 
-Returns a JSON object containing the success status and array of files and folders:
+Returns a JSON object containing the success status, size in bytes, and array of files and folders:
 
 ```json
 {
   "success": true,
+  "size": 93141,
   "files": ["folder/", "foo.txt", "bar.txt"]
 }
 ```
