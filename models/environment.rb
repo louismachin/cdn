@@ -44,6 +44,15 @@ class Environment
         user = @data.dig('users', username)
         return user && (user['password'] == password)
     end
+
+    def check_cookie(cookie)
+        self.given_tokens.include?(cookie)
+    end
+
+    def check_api_key(api_key)
+        all_api_keys = @data.dig('users').map { |_, data| data.dig('api_keys') }.flatten
+        return all_api_keys.include?(api_key)
+    end
 end
 
 $env = Environment.new

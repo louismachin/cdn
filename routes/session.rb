@@ -5,7 +5,14 @@ helpers do
 
   def is_logged_in?
     cookie = request.cookies[$env.cookie_name]
-    cookie && $env.given_tokens.include?(cookie)
+    api_key = params['api_key']
+    if api_key
+      $env.check_api_key(api_key)
+    elsif cookie
+      $env.check_cookie(cookie)
+    else
+      false
+    end
   end
 
   def protected!
