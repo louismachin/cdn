@@ -52,3 +52,13 @@ def get_file_tree(key = nil)
     end
     return tree
 end
+
+$cached_file_mimetypes = {}
+
+def get_file_mimetype(path)
+    return $cached_file_mimetypes[path] if $cached_file_mimetypes.include?(path)
+    command = ["file", "--brief", "--mime-type", path]
+    mimetype = IO.popen(command, in: :close, err: :close).read.chomp
+    $cached_file_mimetypes[path] = mimetype
+    return mimetype
+end
