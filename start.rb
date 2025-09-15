@@ -14,6 +14,7 @@ configure do
 end
 
 require_relative './helpers/files'
+require_relative './helpers/key_values'
 
 require_relative './routes/session'
 require_relative './routes/index'
