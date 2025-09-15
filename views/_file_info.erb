@@ -4,7 +4,8 @@
 
 <script>
     let closeInfo = () => {
-        document.getElementById('info-pop-up').style.display = 'none'
+        document.getElementById('info-pop-up').classList.remove('show')
+        document.getElementById('overlay').classList.remove('show')
     }
 
     let showInfo = (uri) => {
@@ -19,7 +20,8 @@
         })
         .then(data => {
             // alert(JSON.stringify(data))
-            document.getElementById('info-pop-up').style.display = 'flex'
+            document.getElementById('info-pop-up').classList.add('show')
+            document.getElementById('overlay').classList.add('show')
         })
         .catch(error => {
             console.error('Error:', error)
