@@ -38,6 +38,7 @@
             end
             download_href = '/download/' + encoded_segments.join('/')
             delete_href = '/delete/' + encoded_segments.join('/')
+            info_href = '/info/' + encoded_segments.join('/')
         %>
         <tr>
             <td>
@@ -46,11 +47,30 @@
             <td>
                 <a onclick="deleteFile('<%= delete_href %>')">&#128465;</a>
             </td>
+            <td>
+                <a onclick="infoFile('<%= info_href %>')">&#9432;</a>
+            </td>
         </tr>
     <% end %>
 </table>
 
 <script>
+    let infoFile = (uri) => {
+        fetch(uri, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert(response.body)
+            } else {
+                alert('Error deleting file. Please try again.')
+            }
+        })
+    }
+
     let deleteFile = (uri) => {
         if (confirm("Are you sure?")) {
             fetch(uri, {
