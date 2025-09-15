@@ -12,7 +12,7 @@ get '/info/*' do
 
     if File.file?(full_path)
         content_type 'application/json'
-        { type: get_file_info(full_path) }.to_json
+        get_file_info(full_path).to_json
     else
         halt 400, "Invalid file type"
     end
