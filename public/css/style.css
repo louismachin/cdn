@@ -10,7 +10,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-div#page, div.pop-up {
+div#page {
     display: flex;
     flex-direction: column;
     padding: 16px;
@@ -20,6 +20,10 @@ div#page, div.pop-up {
 
 div.pop-up {
     display: none;
+    flex-direction: column;
+    padding: 16px;
+    background-color: white;
+    box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px, rgb(255, 85, 85) 0px 0px 0px 15px;
 }
 
 table#files {
