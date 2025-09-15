@@ -72,6 +72,7 @@ def get_file_info(path)
     info_path = path + '.info'
     if File.file?(info_path)
         info = YAML.load_file(info_path)
+        puts "get_file_info\tinfo=#{info.inspect}"
     else
         info = {}
     end
