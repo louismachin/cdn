@@ -64,3 +64,16 @@ def get_file_mimetype(path)
     $cached_file_mimetypes[path] = mimetype
     return mimetype
 end
+
+$cached_file_info = {}
+
+def get_file_info(path)
+    return $cached_file_info[path] if $cached_file_info.include?(path)
+    info_path = path + '.info'
+    if File.file?(info_path)
+        info = YAML.load_file(info_path)
+    else
+        info = {}
+    end
+    return info
+end
