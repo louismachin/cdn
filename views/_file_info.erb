@@ -1,0 +1,28 @@
+<div id="info-pop-up" class="pop-up">
+    <button onclick="closeInfo()">Close</button>
+</div>
+
+<script>
+    let closeInfo = () => {
+        document.getElementById('info-pop-up').style.display = 'none'
+    }
+
+    let showInfo = (uri) => {
+        fetch(uri, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (response.ok) return response.json()
+        })
+        .then(data => {
+            alert(JSON.stringify(data))
+            document.getElementById('info-pop-up').style.display = 'flex'
+        })
+        .catch(error => {
+            console.error('Error:', error)
+        })
+    }
+</script>

@@ -45,34 +45,16 @@
                 <a href="<%= download_href %>"><%= branch %></a>
             </td>
             <td>
-                <a onclick="deleteFile('<%= delete_href %>')">&#128465;</a>
+                <a onclick="showInfo('<%= info_href %>')">&#9432;</a>
             </td>
             <td>
-                <a onclick="infoFile('<%= info_href %>')">&#9432;</a>
+                <a onclick="deleteFile('<%= delete_href %>')">&#128465;</a>
             </td>
         </tr>
     <% end %>
 </table>
 
 <script>
-    let infoFile = (uri) => {
-        fetch(uri, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        .then(response => {
-            if (response.ok) return response.json()
-        })
-        .then(data => {
-            alert(JSON.stringify(data))
-        })
-        .catch(error => {
-            console.error('Error:', error)
-        })
-    }
-
     let deleteFile = (uri) => {
         if (confirm("Are you sure?")) {
             fetch(uri, {
@@ -91,7 +73,7 @@
             .catch(error => {
                 console.error('Error:', error)
                 alert('Error deleting file. Please try again.')
-            });
+            })
         }
     }
 </script>

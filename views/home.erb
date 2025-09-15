@@ -11,6 +11,7 @@
             <button onclick="window.location = '/upload/<%= key.join('/') %>'">Upload</button>
         </div>
         <%= erb :_files, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed, } %>
+        <%= erb :_file_info, locals: {} %>
     </div>
 </body>
 
