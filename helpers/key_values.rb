@@ -13,13 +13,19 @@ rescue => e
 end
 
 def write_key_values(path, hash)
+    puts "Opening file for writing: #{path}"
     File.open(path, 'w') do |file|
         hash.each do |key, value|
-            file.puts "#{key}=#{value}"
+            line = "#{key}=#{value}"
+            puts "Writing line: #{line}"
+            file.puts line
         end
     end
+    puts "File write completed successfully"
     return true
 rescue => e
     puts "Error writing file: #{e.message}"
+    puts "Error class: #{e.class}"
+    puts "Backtrace: #{e.backtrace.join("\n")}"
     return false
 end
