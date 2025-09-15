@@ -40,7 +40,7 @@ post '/info/*' do
         halt 400, "Request body must be a JSON object"
     end
 
-    if write_key_values(full_path, data)
+    if write_key_values(full_path + '.info', data)
         reset_file_info_cache
         content_type 'application/json'
         { success: true, message: "File updated successfully" }.to_json
