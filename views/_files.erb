@@ -63,11 +63,13 @@
             }
         })
         .then(response => {
-            if (response.ok) {
-                alert(response.body)
-            } else {
-                alert('Error deleting file. Please try again.')
-            }
+            if (response.ok) return response.json()
+        })
+        .then(data => {
+            alert(data)
+        })
+        .catch(error => {
+            console.error('Error:', error)
         })
     }
 
