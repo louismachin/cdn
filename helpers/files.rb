@@ -78,3 +78,7 @@ def get_file_info(path)
     end
     return info
 end
+
+def reset_file_info_cache
+    $cached_file_info = {}
+end

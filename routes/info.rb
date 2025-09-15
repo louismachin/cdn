@@ -41,6 +41,7 @@ post '/info/*' do
     end
 
     if write_key_values(full_path, data)
+        reset_file_info_cache
         content_type 'application/json'
         { success: true, message: "File updated successfully" }.to_json
     else
