@@ -69,7 +69,7 @@ $cached_file_info = {}
 
 def load_key_values(path)
     return nil unless File.file?(path)
-    lines = File.readlines(path).map(&:chomp))
+    lines = File.readlines(path).map(&:chomp)
     data = {}
     for line in lines do
         key, value = line.split('=', 2)
