@@ -67,11 +67,22 @@ end
 
 $cached_file_info = {}
 
+def load_key_values(path)
+    return nil unless File.file?(path)
+    lines = File.readlines(path).map(&:chomp))
+    data = {}
+    for line in lines do
+        key, value = line.split('=', 2)
+        data[key] = value
+    end
+    return data
+end
+
 def get_file_info(path)
     return $cached_file_info[path] if $cached_file_info.include?(path)
     info_path = path + '.info'
     if File.file?(info_path)
-        info = YAML.load_file(info_path)
+        info = load_key_values(info_path)
         puts "get_file_info\tinfo=#{info.inspect}"
     else
         info = {}
