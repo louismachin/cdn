@@ -1,6 +1,8 @@
 def load_key_values(path)
     return nil unless File.file?(path)
     lines = File.readlines(path).map(&:chomp)
+    puts "load_key_values\tpath=#{path}"
+    puts "load_key_values\tlines=#{lines}"
     data = {}
     lines.each do |line|
         key, value = line.split('=', 2)
