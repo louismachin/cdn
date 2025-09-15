@@ -2,9 +2,9 @@ DIR_DELIMITER = ';;'
 
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
-    root_files.reject! { |file| file.endswith('.info') }
+    root_files.reject! { |file| file.end_with?('.info') }
     nested_files = files.select { |file| file.include?('/') }
-    nested_files.reject! { |file| file.endswith('.info') }
+    nested_files.reject! { |file| file.end_with?('.info') }
     result = root_files.dup
     grouped = nested_files.group_by { |file| file.split('/')[0] }
     grouped.each do |dir, files_in_dir|
