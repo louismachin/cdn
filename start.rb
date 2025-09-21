@@ -6,18 +6,17 @@ require_relative './models/environment'
 APP_ROOT = File.expand_path(__dir__)
 
 configure do
-    set :bind, '0.0.0.0'
-    set :port, $env.port
-    set :public_folder, File.expand_path('public', __dir__)
-    set :environment, :production
-    disable :protection
-    enable :logging
-    set :logger, Logger.new(STDOUT)
+  set :bind, '0.0.0.0'
+  set :port, $env.port
+  set :public_folder, File.expand_path('public', __dir__)
+  set :environment, :production
+  disable :protection
 end
 
-configure :development do
+configure :production, :development do
   enable :logging
   set :logger, Logger.new(STDOUT)
+  logger.level = Logger::INFO
 end
 
 require_relative './helpers/files'
