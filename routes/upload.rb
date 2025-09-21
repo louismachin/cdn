@@ -50,11 +50,11 @@ post '/upload_text/?*' do
 
     puts params.inspect
 
-    unless params[:filename]
+    unless params['filename']
         halt 400, { 'success' => false, 'error' => 'Missing required fields' }.to_json
     end
 
-    filename = params[:filename]
+    filename = params['filename']
     content = request.body.read
 
     # Build the full path: directory from splat + actual filename
