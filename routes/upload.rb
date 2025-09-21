@@ -48,7 +48,9 @@ post '/upload_text/?*' do
     is_public = initial_dir == 'public'
     protected! unless is_public
 
-    $stdout.puts params.inspect
+    File.open('/tmp/sinatra_debug.log', 'a') do |f|
+        f.puts "[#{Time.now}] Params: #{params.inspect}"
+    end
 
     unless params['filename']
         halt 400, { 'success' => false, 'error' => 'Missing required fields' }.to_json
