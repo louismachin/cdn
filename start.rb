@@ -15,6 +15,11 @@ configure do
     set :logger, Logger.new(STDOUT)
 end
 
+configure :development do
+  enable :logging
+  set :logger, Logger.new(STDOUT)
+end
+
 require_relative './helpers/files'
 require_relative './helpers/key_values'
 
