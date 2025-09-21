@@ -13,11 +13,6 @@ configure do
   disable :protection
 end
 
-configure :production, :development do
-  enable :logging
-  set :logger, Logger.new(STDOUT)
-end
-
 require_relative './helpers/files'
 require_relative './helpers/key_values'
 
