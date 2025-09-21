@@ -48,7 +48,7 @@ post '/upload_text/?*' do
     is_public = initial_dir == 'public'
     protected! unless is_public
 
-    request.logger.info params.inspect
+    puts params.inspect
 
     unless params['filename']
         halt 400, { 'success' => false, 'error' => 'Missing required fields' }.to_json
