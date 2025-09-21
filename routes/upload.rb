@@ -16,7 +16,11 @@ post '/upload/?*' do
     protected! unless is_public
 
     unless params[:file] && params[:file][:tempfile]
-        halt 400, { 'success' => false, 'error' => 'Missing required fields' }.to_json
+        halt 400, {
+            'success' => false,
+            'error' => 'Missing required fields',
+            'debug' => 'POST /upload/?*',
+        }.to_json
     end
 
     # Get the uploaded file
