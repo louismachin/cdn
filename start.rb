@@ -16,7 +16,6 @@ end
 configure :production, :development do
   enable :logging
   set :logger, Logger.new(STDOUT)
-  logger.level = Logger::INFO
 end
 
 require_relative './helpers/files'
