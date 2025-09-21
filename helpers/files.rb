@@ -2,7 +2,9 @@ DIR_DELIMITER = ';;'
 
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
+    root_files.reject! { |file| file.end_with?('.info') }
     nested_files = files.select { |file| file.include?('/') }
+    nested_files.reject! { |file| file.end_with?('.info') }
     result = root_files.dup
     grouped = nested_files.group_by { |file| file.split('/')[0] }
     grouped.each do |dir, files_in_dir|
@@ -61,4 +63,22 @@ def get_file_mimetype(path)
     mimetype = IO.popen(command, in: :close, err: :close).read.chomp
     $cached_file_mimetypes[path] = mimetype
     return mimetype
+end
+
+$cached_file_info = {}
+
+def get_file_info(path)
+    return $cached_file_info[path] if $cached_file_info.include?(path)
+    info_path = path + '.info'
+    if File.file?(info_path)
+        info = load_key_values(info_path)
+        puts "get_file_info\tinfo=#{info.inspect}"
+    else
+        info = {}
+    end
+    return info
+end
+
+def reset_file_info_cache
+    $cached_file_info = {}
 end

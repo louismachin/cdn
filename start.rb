@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'yaml'
 
 require_relative './models/environment'
 
@@ -13,6 +14,7 @@ configure do
 end
 
 require_relative './helpers/files'
+require_relative './helpers/key_values'
 
 require_relative './routes/session'
 require_relative './routes/index'
@@ -20,5 +22,6 @@ require_relative './routes/view'
 require_relative './routes/upload'
 require_relative './routes/download'
 require_relative './routes/move'
+require_relative './routes/info'
 require_relative './routes/list'
 require_relative './routes/mimetype'

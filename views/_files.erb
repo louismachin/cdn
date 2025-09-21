@@ -38,10 +38,14 @@
             end
             download_href = '/download/' + encoded_segments.join('/')
             delete_href = '/delete/' + encoded_segments.join('/')
+            info_href = '/info/' + encoded_segments.join('/')
         %>
         <tr>
             <td>
                 <a href="<%= download_href %>"><%= branch %></a>
+            </td>
+            <td>
+                <a onclick="showInfo('<%= info_href %>')">&#9432;</a>
             </td>
             <td>
                 <a onclick="deleteFile('<%= delete_href %>')">&#128465;</a>
@@ -69,7 +73,7 @@
             .catch(error => {
                 console.error('Error:', error)
                 alert('Error deleting file. Please try again.')
-            });
+            })
         }
     }
 </script>
