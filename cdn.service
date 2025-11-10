@@ -1,0 +1,21 @@
+[Unit]
+Description=CDN Web Application
+After=network.target
+
+[Service]
+Type=simple
+User=louis
+WorkingDirectory=/opt/cdn
+ExecStart=/usr/bin/rake run
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=louismachin
+
+# Environment variables if needed
+Environment="RACK_ENV=production"
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+
+[Install]
+WantedBy=multi-user.target
