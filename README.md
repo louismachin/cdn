@@ -63,3 +63,16 @@ GET /download/config/settings.json
 
 - **Directory**: Returns a `.tar.gz` compressed archive of the directory
 - **File**: Returns the file directly
+
+## Service
+
+```
+sudo ln -s /opt/cdn/cdn.service /etc/systemd/system/cdn.service
+sudo systemctl daemon-reload
+sudo systemctl enable cdn.service
+sudo systemctl start cdn.service
+
+
+sudo journalctl -u cdn.service -n 50
+sudo journalctl -u cdn.service -f
+```
