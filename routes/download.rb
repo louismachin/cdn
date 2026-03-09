@@ -13,6 +13,8 @@ download_file = proc do
     if File.file?(full_path)
         send_file full_path
     elsif File.directory?(full_path)
+        protected! # don't allow public directory downloads
+
         basename = File.basename(file_path)
         dirname = File.dirname(full_path)
 
