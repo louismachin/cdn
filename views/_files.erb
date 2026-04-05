@@ -1,79 +1,92 @@
 <table id="files">
-    <% if (key.size > 0) && (!is_jailed) %>
+    <thead>
         <tr>
-            <td>
-                <%
-                    new_key = key[0..-2]
-                    dir = new_key
-                        .map { |k| URI.encode_www_form_component(k) }
-                        .join('/')
-                    href = '/view/' + dir
-                %>
-                <a href="<%= href %>">&#128193; ..</a>
-            </td>
+            <th class="col-name">Name</th>
+            <th class="col-action"></th>
         </tr>
-    <% end %>
-    <% file_tree.each do |branch| %>
-        <%
-            next if branch.is_a?(String)
-            branch = branch.keys[0]
-            new_key = key.size == 0 ? [branch] : (key + [branch])
-            dir = new_key
-                .map { |k| URI.encode_www_form_component(k) }
-                .join('/')
-            href = '/view/' + dir
-        %>
-        <tr>
-            <td>
-                <a href="<%= href %>">&#128193; <%= branch %></a>
-            </td>
-        </tr>
-    <% end %>
-    <% file_tree.each do |branch| %>
-        <%
-            next unless branch.is_a?(String)
-            all_segments = key.empty? ? [branch] : key + [branch]
-            encoded_segments = all_segments.map do |segment|
-                URI.encode_www_form_component(segment)
-            end
-            download_href = '/download/' + encoded_segments.join('/')
-            delete_href = '/delete/' + encoded_segments.join('/')
-            info_href = '/info/' + encoded_segments.join('/')
-        %>
-        <tr>
-            <td>
-                <a href="<%= download_href %>"><%= branch %></a>
-            </td>
-            <td>
-                <a onclick="showInfo('<%= info_href %>')">&#9432;</a>
-            </td>
-            <td>
-                <a onclick="deleteFile('<%= delete_href %>')">&#128465;</a>
-            </td>
-        </tr>
-    <% end %>
+    </thead>
+    <tbody>
+
+        <%# parent directory row %>
+        <% if key.size > 0 && !is_jailed %>
+            <%
+                dir    = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
+                href = '/view/' + dir
+            %>
+            <tr>
+                <td class="col-name">
+                    <a class="file-link" href="<%= href %>">
+                        <span class="file-icon">&#128193;</span>
+                        <span>..</span>
+                    </a>
+                </td>
+                <td class="col-action"></td>
+            </tr>
+        <% end %>
+
+        <%# directories %>
+        <% file_tree.each do |branch| %>
+            <% next if branch.is_a?(String) %>
+            <%
+                name        = branch.keys[0]
+                new_key = key.size == 0 ? [name] : (key + [name])
+                dir         = new_key.map { |k| URI.encode_www_form_component(k) }.join('/')
+                href        = '/view/' + dir
+            %>
+            <tr>
+                <td class="col-name">
+                    <a class="file-link" href="<%= href %>">
+                        <span class="file-icon">&#128193;</span>
+                        <span><%= name %></span>
+                    </a>
+                </td>
+                <td class="col-action"></td>
+            </tr>
+        <% end %>
+
+        <%# files %>
+        <% file_tree.each do |branch| %>
+            <% next unless branch.is_a?(String) %>
+            <%
+                all_segments         = key.empty? ? [branch] : key + [branch]
+                encoded                    = all_segments.map { |s| URI.encode_www_form_component(s) }
+                download_href        = '/download/' + encoded.join('/')
+                delete_href            = '/delete/'     + encoded.join('/')
+                info_href                = '/info/'         + encoded.join('/')
+            %>
+            <tr>
+                <td class="col-name">
+                    <a class="file-link" href="<%= download_href %>">
+                        <span class="file-icon">&#128196;</span>
+                        <span><%= branch %></span>
+                    </a>
+                </td>
+                <td class="col-action">
+                    <button class="icon-btn" onclick="showInfo('<%= info_href %>')" title="Properties">&#9432;</button>
+                    <button class="icon-btn delete" onclick="deleteFile('<%= delete_href %>')" title="Delete">&#128465;</button>
+                </td>
+            </tr>
+        <% end %>
+
+        <% if file_tree.empty? && (key.size == 0 || is_jailed) %>
+            <tr>
+                <td colspan="2" style="padding: 48px 16px; text-align: center; color: #5f6368;">
+                    No files yet
+                </td>
+            </tr>
+        <% end %>
+
+    </tbody>
 </table>
 
 <script>
     let deleteFile = (uri) => {
-        if (confirm("Are you sure?")) {
-            fetch(uri, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+        if (!confirm('Delete this file?')) return
+        fetch(uri, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+            .then(r => {
+                if (r.ok) window.location.reload()
+                else alert('Error deleting file.')
             })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload()
-                } else {
-                    alert('Error deleting file. Please try again.')
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error)
-                alert('Error deleting file. Please try again.')
-            })
-        }
+            .catch(() => alert('Error deleting file.'))
     }
 </script>

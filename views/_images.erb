@@ -1,0 +1,190 @@
+<div id="images-view">
+
+    <%# directories (shown as regular rows, same as _files.erb) %>
+    <% has_dirs = file_tree.any? { |b| !b.is_a?(String) } %>
+    <% has_files = file_tree.any? { |b| b.is_a?(String) } %>
+
+    <% if key.size > 0 && !is_jailed || has_dirs %>
+        <table id="files" class="dirs-table">
+            <tbody>
+
+                <%# parent directory row %>
+                <% if key.size > 0 && !is_jailed %>
+                    <%
+                        dir    = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
+                        href = '/view/' + dir
+                    %>
+                    <tr>
+                        <td class="col-name">
+                            <a class="file-link" href="<%= href %>">
+                                <span class="file-icon">&#128193;</span>
+                                <span>..</span>
+                            </a>
+                        </td>
+                        <td class="col-action"></td>
+                    </tr>
+                <% end %>
+
+                <%# directories %>
+                <% file_tree.each do |branch| %>
+                    <% next if branch.is_a?(String) %>
+                    <%
+                        name        = branch.keys[0]
+                        new_key = key.size == 0 ? [name] : (key + [name])
+                        dir         = new_key.map { |k| URI.encode_www_form_component(k) }.join('/')
+                        href        = '/view/' + dir
+                    %>
+                    <tr>
+                        <td class="col-name">
+                            <a class="file-link" href="<%= href %>">
+                                <span class="file-icon">&#128193;</span>
+                                <span><%= name %></span>
+                            </a>
+                        </td>
+                        <td class="col-action"></td>
+                    </tr>
+                <% end %>
+
+            </tbody>
+        </table>
+    <% end %>
+
+    <%# image grid %>
+    <% if has_files %>
+        <div class="image-grid">
+            <% file_tree.each do |branch| %>
+                <% next unless branch.is_a?(String) %>
+                <%
+                    all_segments    = key.empty? ? [branch] : key + [branch]
+                    encoded             = all_segments.map { |s| URI.encode_www_form_component(s) }
+                    download_href = '/download/' + encoded.join('/')
+                    delete_href     = '/delete/'     + encoded.join('/')
+                    info_href         = '/info/'         + encoded.join('/')
+                %>
+                <div class="image-card">
+                    <a class="image-thumb-link" href="<%= download_href %>">
+                        <img class="image-thumb" src="<%= download_href %>" alt="<%= branch %>" loading="lazy"
+                                 onerror="this.closest('.image-thumb-link').replaceWith(fallbackIcon())">
+                    </a>
+                    <div class="image-card-footer">
+                        <span class="image-name" title="<%= branch %>"><%= branch %></span>
+                        <div class="image-actions">
+                            <button class="icon-btn" onclick="showInfo('<%= info_href %>')" title="Properties">&#9432;</button>
+                            <button class="icon-btn delete" onclick="deleteFile('<%= delete_href %>')" title="Delete">&#128465;</button>
+                        </div>
+                    </div>
+                </div>
+            <% end %>
+        </div>
+    <% end %>
+
+    <% if file_tree.empty? && (key.size == 0 || is_jailed) %>
+        <div style="padding: 48px 16px; text-align: center; color: #5f6368;">No files yet</div>
+    <% end %>
+
+</div>
+
+<style>
+    .dirs-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .dirs-table tr { border-bottom: 1px solid var(--border); }
+    .dirs-table tr:last-child { border-bottom: none; }
+    .dirs-table tr:hover { background: var(--row-hover); }
+    .dirs-table td { padding: 9px 16px; vertical-align: middle; }
+    .dirs-table td.col-name { width: 100%; }
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .image-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: var(--surface);
+        transition: box-shadow 0.12s;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .image-card:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .image-thumb-link {
+        display: block;
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: var(--bg);
+    }
+
+    .image-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: opacity 0.1s;
+    }
+
+    .image-card:hover .image-thumb { opacity: 0.92; }
+
+    .image-card-footer {
+        padding: 8px 10px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .image-name {
+        font-size: 12px;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .image-actions {
+        display: flex;
+        gap: 2px;
+        flex-shrink: 0;
+    }
+
+    .image-actions .icon-btn {
+        opacity: 0;
+        font-size: 12px;
+        padding: 3px 4px;
+    }
+
+    .image-card:hover .icon-btn { opacity: 1; }
+</style>
+
+<script>
+    function fallbackIcon() {
+        const el = document.createElement('div')
+        el.style.cssText = 'width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;background:var(--bg);'
+        el.textContent = '🖼️'
+        return el
+    }
+
+    let deleteFile = (uri) => {
+        if (!confirm('Delete this file?')) return
+        fetch(uri, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+            .then(r => {
+                if (r.ok) window.location.reload()
+                else alert('Error deleting file.')
+            })
+            .catch(() => alert('Error deleting file.'))
+    }
+</script>

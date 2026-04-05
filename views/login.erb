@@ -1,42 +1,100 @@
 <!DOCTYPE html>
 <html>
-
 <%= erb :_head, locals: { copy: @copy } %>
-
-<body>
-    <div id="page">
-        <input class="mb" id="username" placeholder="Username...">
-        <input class="mb" id="password" placeholder="Password..." type="password">
-        <div class="buttons">
-            <button onclick="submitAttempt()">Submit</button>
-            <button onclick="window.location ='/help'">Help</button>
+<body style="justify-content: center; align-items: center; display: flex; min-height: 100vh;">
+    <div class="login-card">
+        <!--
+        <div class="login-header">
+            <span class="wordmark"><%= @copy[:title] %></span>
+        </div>
+        -->
+        <div class="login-body">
+            <input class="login-input mb" id="username" placeholder="Username" autocomplete="username">
+            <input class="login-input mb" id="password" placeholder="Password" type="password" autocomplete="current-password">
+            <div id="login-error" class="login-error"></div>
+            <div class="buttons">
+                <button class="btn btn-ghost" onclick="window.location = '/help'">Help</button>
+                <button class="btn btn-primary" onclick="submitAttempt()">Sign in</button>
+            </div>
         </div>
     </div>
 </body>
 
-<script>
-    document.getElementById('password').onkeypress = (event) => {
-        if (event.key === 'Enter') submitAttempt()
+<style>
+    .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 360px;
+        overflow: hidden;
     }
 
-    var submitAttempt = () => {
+    .login-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .login-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .login-input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 8px 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--surface);
+        transition: border-color 0.1s;
+    }
+
+    .login-input:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+
+    .login-error {
+        display: none;
+        font-size: 13px;
+        color: var(--danger);
+        margin-bottom: 12px;
+    }
+
+    .login-body .buttons {
+        justify-content: flex-end;
+        margin-top: 4px;
+    }
+</style>
+
+<script>
+    document.getElementById('password').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') submitAttempt()
+    })
+
+    let submitAttempt = () => {
         const username = document.getElementById('username').value
         const password = document.getElementById('password').value
+        const error        = document.getElementById('login-error')
+        error.style.display = 'none'
+
         fetch('/login', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({
-                username: username,
-                password: password,
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
         }).then(res => {
-            if (res.status == 200) {
+            if (res.status === 200) {
                 document.location.href = '/'
             } else {
-                window.location.reload()
+                error.textContent = 'Incorrect username or password.'
+                error.style.display = 'block'
             }
         })
     }
 </script>
-
 </html>

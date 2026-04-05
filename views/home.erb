@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html>
-
 <%= erb :_head, locals: { copy: @copy } %>
-<% require 'uri' %>
-
 <body>
     <div id="page">
-        <div class="buttons mb">
-            <button onclick="window.location = '/logout'">Logout</button>
-            <button onclick="window.location = '/upload/<%= key.join('/') %>'">Upload</button>
+        <div class="toolbar">
+            <div class="toolbar-left">
+            <span class="wordmark"><!-- <%= @copy[:title] %> --></span>
+            <%= erb :_breadcrumb, locals: { key: @key } rescue '' %>
+            </div>
+            <div class="buttons">
+            <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
+            <button class="btn btn-primary" onclick="window.location = '/upload/<%= @key.join('/') %>'">&#8593; Upload</button>
+            </div>
         </div>
-        <%= erb :_files, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed, } %>
+
+        <div class="file-table-wrap">
+            <%= erb :_images, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed } %>
+        </div>
+
         <%= erb :_file_info, locals: {} %>
     </div>
 </body>
-
 </html>

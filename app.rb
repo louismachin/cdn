@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'yaml'
+require 'uri'
 
 require_relative './models/environment'
 

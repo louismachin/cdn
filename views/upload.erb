@@ -5,63 +5,85 @@
 <% base_uri += '/' + key.join('/') if key && !key.empty? %>
 <body>
     <div id="page">
-        <div class="upload-form">
-            <form id="uploadForm" style="display: flex; flex-direction: column" enctype="multipart/form-data">
-                <input class="mb" type="file" name="file" id="fileInput" required>
-                <input type="submit" value="Upload File">
-            </form>
+        <div class="toolbar">
+            <div class="toolbar-left">
+                <span class="wordmark"><%= @copy[:title] %></span>
+            </div>
+            <div class="buttons">
+                <button class="btn btn-ghost" onclick="history.back()">&#8592; Back</button>
+            </div>
+        </div>
+
+        <div class="upload-wrap">
+            <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <span class="drop-icon">&#8686;</span>
+                <p>Drop a file here or click to browse</p>
+                <small>Uploads to /<%= key.join('/') %></small>
+            </div>
+            <p class="selected-file" id="selectedFile"></p>
+            <input type="file" id="fileInput" name="file">
+            <button class="btn btn-primary" id="uploadBtn" onclick="doUpload()" disabled>Upload</button>
         </div>
     </div>
 </body>
+
 <script>
-    document.getElementById('uploadForm').addEventListener('submit', (e) => {
-        e.preventDefault()
-        
-        const fileInput = document.getElementById('fileInput')
-        const file = fileInput.files[0]
-        
-        if (!file) {
-            alert('Please select a file')
-            return
-        }
+    const dropZone    = document.getElementById('dropZone')
+    const fileInput = document.getElementById('fileInput')
+    const uploadBtn = document.getElementById('uploadBtn')
+    const selectedFile = document.getElementById('selectedFile')
+    let chosenFile = null
 
-        const uploadUri = '<%= base_uri %>'
-
-        // Create FormData
-        const formData = new FormData()
-        formData.append('file', file)
-        
-        // Upload the file
-        fetch(uploadUri, {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            console.log('Response status:', response.status)
-            console.log('Response headers:', response.headers.get('content-type'))
-
-            const contentType = response.headers.get('content-type');
-            if (contentType && contentType.includes('application/json')) {
-                return response.json()
-            } else {
-                return response.text().then(text => {
-                    console.log('Non-JSON response:', text)
-                    throw new Error('Server returned non-JSON response: ' + text)
-                })
-            }
-        })
-        .then(data => {
-            if (data.success) {
-                // Redirect back or reload
-                window.location.href = '/'
-            } else {
-                alert('Upload failed: ' + (data.error || 'Unknown error'))
-            }
-        })
-        .catch(error => {
-            console.error('Upload error:', error)
-            alert('Upload failed: ' + error.message)
-        })
+    fileInput.addEventListener('change', () => {
+        chosenFile = fileInput.files[0]
+        showSelected()
     })
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault()
+        dropZone.classList.add('dragover')
+    })
+
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'))
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault()
+        dropZone.classList.remove('dragover')
+        chosenFile = e.dataTransfer.files[0]
+        showSelected()
+    })
+
+    function showSelected() {
+        if (!chosenFile) return
+        selectedFile.textContent = chosenFile.name
+        selectedFile.style.display = 'block'
+        uploadBtn.disabled = false
+    }
+
+    function doUpload() {
+        if (!chosenFile) return
+        uploadBtn.disabled = true
+        uploadBtn.textContent = 'Uploading…'
+
+        const formData = new FormData()
+        formData.append('file', chosenFile)
+
+        fetch('<%= base_uri %>', { method: 'POST', body: formData })
+            .then(r => {
+                const ct = r.headers.get('content-type')
+                if (ct && ct.includes('application/json')) return r.json()
+                return r.text().then(t => { throw new Error(t) })
+            })
+            .then(data => {
+                if (data.success) window.location.href = '/'
+                else { alert('Upload failed: ' + (data.error || 'unknown error')); resetBtn() }
+            })
+            .catch(err => { alert('Upload failed: ' + err.message); resetBtn() })
+    }
+
+    function resetBtn() {
+        uploadBtn.disabled = false
+        uploadBtn.textContent = 'Upload'
+    }
 </script>
 </html>

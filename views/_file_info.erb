@@ -1,7 +1,17 @@
 <div id="overlay" class="overlay" onclick="closeInfo()"></div>
 
 <div id="info-pop-up" class="pop-up">
-    <div id="popup-content"></div>
+    <div class="pop-up-header">Properties</div>
+    <div class="pop-up-body">
+        <div id="popup-content"></div>
+    </div>
+    <div class="pop-up-footer">
+        <div id="status" class="status"></div>
+        <div class="buttons">
+            <button class="btn btn-ghost" onclick="closeInfo()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveInfo()">Save</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -9,57 +19,45 @@
     let data = {}
 
     let closeInfo = () => {
-        document.getElementById('info-pop-up').style.display = 'none'
-        document.getElementById('overlay').style.display = 'none'
+        document.getElementById('info-pop-up').classList.remove('show')
+        document.getElementById('overlay').classList.remove('show')
     }
 
     let showInfo = (uri) => {
         currentUri = uri
-        document.getElementById('info-pop-up').style.display = 'block'
-        document.getElementById('overlay').style.display = 'block'
-        
+        document.getElementById('popup-content').innerHTML = '<p style="color:#5f6368;font-size:13px">Loading…</p>'
+        document.getElementById('info-pop-up').classList.add('show')
+        document.getElementById('overlay').classList.add('show')
         fetch(uri)
-            .then(response => response.json())
-            .then(result => {
-                data = {...result}
-                renderTable()
-            })
-            .catch(error => {
-                document.getElementById('popup-content').innerHTML = 'Error loading data'
-            })
+            .then(r => r.json())
+            .then(result => { data = { ...result }; renderTable() })
+            .catch(() => { document.getElementById('popup-content').innerHTML = '<p style="color:#d93025;font-size:13px">Error loading data.</p>' })
     }
 
     let renderTable = () => {
-        let html = '<table class="kv-table">'
-        
+        let rows = ''
         for (let key in data) {
-            html += `
+            rows += `
                 <tr>
                     <td><input type="text" value="${key}" onchange="updateKey('${key}', this.value)"></td>
                     <td><input type="text" value="${data[key]}" onchange="updateValue('${key}', this.value)"></td>
                     <td><button class="remove-btn" onclick="removeRow('${key}')">×</button></td>
-                </tr>
-            `
+                </tr>`
         }
-        
-        html += `
+        rows += `
             <tr>
                 <td><input type="text" id="newKey" placeholder="key"></td>
                 <td><input type="text" id="newValue" placeholder="value"></td>
                 <td><button class="add-btn" onclick="addRow()">+</button></td>
-            </tr>
-        `
-        
-        html += '</table>';
-        html += `
-            <div class="actions">
-                <button class="btn btn-primary" onclick="saveInfo()">Save</button>
-                <button class="btn btn-secondary" onclick="closeInfo()">Cancel</button>
-            </div>
-            <div id="status" class="status"></div>
-        `
-        
-        document.getElementById('popup-content').innerHTML = html
+            </tr>`
+
+        document.getElementById('popup-content').innerHTML = `
+            <table class="kv-table">
+                <thead>
+                    <tr><th>Key</th><th>Value</th><th></th></tr>
+                </thead>
+                <tbody>${rows}</tbody>
+            </table>`
     }
 
     let updateKey = (oldKey, newKey) => {
@@ -70,91 +68,31 @@
         }
     }
 
-    let updateValue = (key, value) => {
-        data[key] = value
-    }
-
-    let removeRow = (key) => {
-        delete data[key]
-        renderTable()
-    }
+    let updateValue = (key, value) => { data[key] = value }
+    let removeRow   = (key) => { delete data[key]; renderTable() }
 
     let addRow = () => {
-        const key = document.getElementById('newKey').value
+        const key   = document.getElementById('newKey').value
         const value = document.getElementById('newValue').value
-        
-        if (key) {
-            data[key] = value
-            renderTable()
-        }
+        if (key) { data[key] = value; renderTable() }
     }
 
     let saveInfo = () => {
         fetch(currentUri, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         })
-        .then(response => {
-            const status = document.getElementById('status')
-            status.textContent = 'Saved!'
-            status.className = 'status success'
-            status.style.display = 'block'
-            setTimeout(() => status.style.display = 'none', 2000)
+        .then(() => {
+            const s = document.getElementById('status')
+            s.textContent = 'Saved'
+            s.className = 'status success'
+            setTimeout(() => { s.className = 'status'; s.textContent = '' }, 2000)
         })
-        .catch(error => {
-            const status = document.getElementById('status')
-            status.textContent = 'Error saving'
-            status.className = 'status error'
-            status.style.display = 'block'
+        .catch(() => {
+            const s = document.getElementById('status')
+            s.textContent = 'Error saving'
+            s.className = 'status error'
         })
     }
 </script>
-
-<style>
-    .kv-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
-
-    .kv-table td {
-        border-bottom: 1px solid #eee;
-    }
-
-    .kv-table input {
-        width: 100%;
-        border: none;
-    }
-
-    .kv-table input:focus {
-        outline: 1px solid #007bff;
-    }
-
-    .remove-btn, .add-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        font-size: 18px;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .remove-btn {
-        color: #dc3545;
-    }
-
-    .add-btn {
-        color: #28a745;
-    }
-
-    .actions {
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-    }
-</style>

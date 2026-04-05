@@ -1,21 +1,74 @@
 <!DOCTYPE html>
 <html>
-
 <%= erb :_head, locals: { copy: @copy } %>
-
-<body>
-    <div id="page" class="help">
-        <p class="mb">This app is developed by <a href="https://louismachin.com">Louis Machin</a>.<br>The repository is available on <a href="https://github.com/louismachin/cdn">GitHub</a>.</p>
-        <div class="buttons mt">
-            <button onclick="window.location = '/login'">Back</button>
+<body style="justify-content: center; align-items: center; display: flex; min-height: 100vh;">
+    <div class="login-card">
+        <!--
+        <div class="login-header">
+            <span class="wordmark"><%= @copy[:title] %></span>
+        </div>
+        -->
+        <div class="login-body">
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+                Developed by <a href="https://louismachin.com">Louis Machin</a>.<br>
+                Source available on <a href="https://github.com/louismachin/cdn">GitHub</a>.
+            </p>
+            <div class="buttons" style="justify-content: flex-end; margin-top: 4px;">
+                <button class="btn btn-ghost" onclick="window.location = '/login'">&#8592; Back</button>
+            </div>
         </div>
     </div>
 </body>
 
 <style>
-    .help p {
-        padding: 0;
-        margin: 0;
+    .login-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        width: 100%;
+        max-width: 360px;
+        overflow: hidden;
+    }
+
+    .login-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .login-body {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .login-input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 8px 12px;
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--text);
+        background: var(--surface);
+        transition: border-color 0.1s;
+    }
+
+    .login-input:focus {
+        outline: none;
+        border-color: var(--accent);
+    }
+
+    .login-error {
+        display: none;
+        font-size: 13px;
+        color: var(--danger);
+        margin-bottom: 12px;
+    }
+
+    .login-body .buttons {
+        justify-content: flex-end;
+        margin-top: 4px;
     }
 </style>
 
