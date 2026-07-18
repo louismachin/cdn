@@ -17,25 +17,25 @@
         <div class="upload-wrap">
             <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
                 <span class="drop-icon">&#8686;</span>
-                <p>Drop a file here or click to browse</p>
+                <p>Drop files here or click to browse</p>
                 <small>Uploads to /<%= key.join('/') %></small>
             </div>
-            <p class="selected-file" id="selectedFile"></p>
-            <input type="file" id="fileInput" name="file">
+            <ul class="selected-file-list" id="selectedFileList"></ul>
+            <input type="file" id="fileInput" name="file" multiple>
             <button class="btn btn-primary" id="uploadBtn" onclick="doUpload()" disabled>Upload</button>
         </div>
     </div>
 </body>
 
 <script>
-    const dropZone    = document.getElementById('dropZone')
-    const fileInput = document.getElementById('fileInput')
-    const uploadBtn = document.getElementById('uploadBtn')
-    const selectedFile = document.getElementById('selectedFile')
-    let chosenFile = null
+    const dropZone      = document.getElementById('dropZone')
+    const fileInput      = document.getElementById('fileInput')
+    const uploadBtn      = document.getElementById('uploadBtn')
+    const selectedFileList = document.getElementById('selectedFileList')
+    let chosenFiles = []
 
     fileInput.addEventListener('change', () => {
-        chosenFile = fileInput.files[0]
+        chosenFiles = Array.from(fileInput.files)
         showSelected()
     })
 
@@ -43,42 +43,50 @@
         e.preventDefault()
         dropZone.classList.add('dragover')
     })
-
     dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'))
-
     dropZone.addEventListener('drop', (e) => {
         e.preventDefault()
         dropZone.classList.remove('dragover')
-        chosenFile = e.dataTransfer.files[0]
+        chosenFiles = Array.from(e.dataTransfer.files)
         showSelected()
     })
 
     function showSelected() {
-        if (!chosenFile) return
-        selectedFile.textContent = chosenFile.name
-        selectedFile.style.display = 'block'
+        if (!chosenFiles.length) return
+        selectedFileList.innerHTML = chosenFiles.map(f => `<li>${f.name}</li>`).join('')
         uploadBtn.disabled = false
     }
 
-    function doUpload() {
-        if (!chosenFile) return
+    async function doUpload() {
+        if (!chosenFiles.length) return
         uploadBtn.disabled = true
-        uploadBtn.textContent = 'Uploading…'
 
-        const formData = new FormData()
-        formData.append('file', chosenFile)
+        let successCount = 0
+        let failures = []
 
-        fetch('<%= base_uri %>', { method: 'POST', body: formData })
-            .then(r => {
-                const ct = r.headers.get('content-type')
-                if (ct && ct.includes('application/json')) return r.json()
-                return r.text().then(t => { throw new Error(t) })
-            })
-            .then(data => {
-                if (data.success) window.location.href = '/'
-                else { alert('Upload failed: ' + (data.error || 'unknown error')); resetBtn() }
-            })
-            .catch(err => { alert('Upload failed: ' + err.message); resetBtn() })
+        for (const file of chosenFiles) {
+            uploadBtn.textContent = `Uploading ${successCount + failures.length + 1} of ${chosenFiles.length}…`
+            try {
+                const formData = new FormData()
+                formData.append('file', file)
+                const res = await fetch('<%= base_uri %>', { method: 'POST', body: formData })
+                const ct = res.headers.get('content-type')
+                const data = ct && ct.includes('application/json')
+                    ? await res.json()
+                    : (() => { throw new Error('Unexpected response') })()
+                if (data.success) successCount++
+                else failures.push(file.name)
+            } catch (err) {
+                failures.push(file.name)
+            }
+        }
+
+        if (failures.length === 0) {
+            window.location.href = '/'
+        } else {
+            alert(`${successCount} uploaded, ${failures.length} failed: ${failures.join(', ')}`)
+            resetBtn()
+        }
     }
 
     function resetBtn() {
