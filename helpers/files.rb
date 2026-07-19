@@ -18,7 +18,7 @@ rescue
 end
 
 space = disk_space
-puts "User: #{space[:used]}"
+puts "Used: #{space[:used]}"
 puts "Free: #{space[:free]}"
 
 def array_to_nested_structure(files)
