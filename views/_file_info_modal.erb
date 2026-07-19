@@ -1,5 +1,3 @@
-<div id="overlay" class="overlay" onclick="closeInfo()"></div>
-
 <div id="info-pop-up" class="pop-up">
     <div class="pop-up-header">Properties</div>
     <div class="pop-up-body">
@@ -8,7 +6,7 @@
     <div class="pop-up-footer">
         <div id="status" class="status"></div>
         <div class="buttons">
-            <button class="btn btn-ghost" onclick="closeInfo()">Cancel</button>
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
             <button class="btn btn-primary" onclick="saveInfo()">Save</button>
         </div>
     </div>
@@ -18,16 +16,10 @@
     let currentUri = ''
     let data = {}
 
-    let closeInfo = () => {
-        document.getElementById('info-pop-up').classList.remove('show')
-        document.getElementById('overlay').classList.remove('show')
-    }
-
     let showInfo = (uri) => {
         currentUri = uri
         document.getElementById('popup-content').innerHTML = '<p style="color:#5f6368;font-size:13px">Loading…</p>'
-        document.getElementById('info-pop-up').classList.add('show')
-        document.getElementById('overlay').classList.add('show')
+        openModal('info-pop-up')
         fetch(uri)
             .then(r => r.json())
             .then(result => { data = { ...result }; renderTable() })

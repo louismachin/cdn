@@ -1,0 +1,82 @@
+<div id="upload-pop-up" class="pop-up">
+    <div class="pop-up-header">Upload Files</div>
+    <div class="pop-up-body">
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <span class="drop-icon">&#8686;</span>
+            <p>Drop files here or click to browse</p>
+        </div>
+        <ul class="selected-file-list" id="selectedFileList"></ul>
+        <input type="file" id="fileInput" name="file" multiple style="display:none">
+    </div>
+    <div class="pop-up-footer">
+        <div id="upload-status" class="status"></div>
+        <div class="buttons">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="uploadBtn" onclick="doUpload()" disabled>Upload</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dropZone = document.getElementById('dropZone')
+    const fileInput = document.getElementById('fileInput')
+    const uploadBtn = document.getElementById('uploadBtn')
+    const selectedFileList = document.getElementById('selectedFileList')
+    let chosenFiles = []
+
+    function showUpload() {
+        chosenFiles = []
+        fileInput.value = ''
+        selectedFileList.innerHTML = ''
+        uploadBtn.disabled = true
+        openModal('upload-pop-up')
+    }
+
+    fileInput.addEventListener('change', () => { chosenFiles = Array.from(fileInput.files); showSelected() })
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover') })
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'))
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault()
+        dropZone.classList.remove('dragover')
+        chosenFiles = Array.from(e.dataTransfer.files)
+        showSelected()
+    })
+
+    function showSelected() {
+        if (!chosenFiles.length) return
+        selectedFileList.innerHTML = chosenFiles.map(f => `<li>${f.name}</li>`).join('')
+        uploadBtn.disabled = false
+    }
+
+    async function doUpload() {
+        if (!chosenFiles.length) return
+        uploadBtn.disabled = true
+
+        let successCount = 0
+        let failures = []
+
+        for (const file of chosenFiles) {
+            uploadBtn.textContent = `Uploading ${successCount + failures.length + 1} of ${chosenFiles.length}…`
+            try {
+                const formData = new FormData()
+                formData.append('file', file)
+                const res = await fetch('/upload/<%= key.join('/') %>', { method: 'POST', body: formData })
+                const data = await res.json()
+                if (data.success) successCount++
+                else failures.push(file.name)
+            } catch (err) {
+                failures.push(file.name)
+            }
+        }
+
+        if (failures.length === 0) {
+            window.location.reload()
+        } else {
+            const s = document.getElementById('upload-status')
+            s.textContent = `${successCount} uploaded, ${failures.length} failed`
+            s.className = 'status error'
+            uploadBtn.disabled = false
+            uploadBtn.textContent = 'Upload'
+        }
+    }
+</script>

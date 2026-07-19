@@ -1,0 +1,63 @@
+<div id="new-folder-pop-up" class="pop-up">
+    <div class="pop-up-header">New Folder</div>
+    <div class="pop-up-body">
+        <input type="text" id="folderName" class="field-input" placeholder="Folder name">
+    </div>
+    <div class="pop-up-footer">
+        <div id="folder-status" class="status"></div>
+        <div class="buttons">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="createFolderBtn" onclick="doCreateFolder()">Create</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showNewFolder() {
+        document.getElementById('folderName').value = ''
+        openModal('new-folder-pop-up')
+        setTimeout(() => document.getElementById('folderName').focus(), 50)
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('new-folder-pop-up').classList.contains('show')) {
+            doCreateFolder()
+        }
+    })
+
+    function doCreateFolder() {
+        const name = document.getElementById('folderName').value.trim()
+        if (!name) return
+        const btn = document.getElementById('createFolderBtn')
+        btn.disabled = true
+        btn.textContent = 'Creating…'
+
+        fetch('/new_folder/<%= key.join('/') %>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'name=' + encodeURIComponent(name)
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) window.location.reload()
+                else {
+                    const s = document.getElementById('folder-status')
+                    s.textContent = data.error || 'Failed'
+                    s.className = 'status error'
+                    resetFolderBtn()
+                }
+            })
+            .catch(() => {
+                const s = document.getElementById('folder-status')
+                s.textContent = 'Error creating folder'
+                s.className = 'status error'
+                resetFolderBtn()
+            })
+    }
+
+    function resetFolderBtn() {
+        const btn = document.getElementById('createFolderBtn')
+        btn.disabled = false
+        btn.textContent = 'Create'
+    }
+</script>

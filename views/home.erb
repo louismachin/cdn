@@ -10,8 +10,8 @@
             </div>
             <div class="buttons">
                 <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
-                <button class="btn btn-primary" onclick="window.location = '/upload/<%= @key.join('/') %>'">&#8593; Upload</button>
-                <button class="btn btn-secondary" onclick="window.location = '/new_folder/<%= @key.join('/') %>'">New Folder</button>
+                <button class="btn btn-primary" onclick="showUpload()">&#8593; Upload</button>
+                <button class="btn btn-secondary" onclick="showNewFolder()">New Folder</button>
             </div>
         </div>
 
@@ -19,7 +19,9 @@
             <%= erb :_images, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed } %>
         </div>
 
-        <%= erb :_file_info, locals: {} %>
+        <%= erb :_file_info_modal, locals: {} %>
+        <%= erb :_upload_modal, locals: {} %>
+        <%= erb :_new_folder_modal, locals: {} %>
     </div>
 </body>
 </html>

@@ -1,0 +1,12 @@
+<div id="overlay" class="overlay" onclick="closeModal()"></div>
+
+<script>
+let openModal = (id) => {
+    document.getElementById(id).classList.add('show')
+    document.getElementById('overlay').classList.add('show')
+}
+let closeModal = () => {
+    document.querySelectorAll('.pop-up.show').forEach(el => el.classList.remove('show'))
+    document.getElementById('overlay').classList.remove('show')
+}
+</script>
