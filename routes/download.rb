@@ -65,13 +65,17 @@ def pdf_preview_path(original_path)
 end
 
 def ensure_pdf_preview(original_path)
-    prefix = pdf_preview_path(original_path)
-    final_path = "#{prefix}-1.jpg"
-    return final_path if File.exist?(final_path)
+    FileUtils.mkdir_p(PREVIEW_CACHE_ROOT)
+    key = preview_cache_key(original_path).sub(/\.pdf\z/i, '')
+    prefix = File.join(PREVIEW_CACHE_ROOT, key)
+
+    existing = Dir.glob("#{prefix}-*.jpg").first
+    return existing if existing
 
     success = system('pdftoppm', '-jpeg', '-f', '1', '-l', '1', '-scale-to', '600', original_path, prefix)
-    return nil unless success && File.exist?(final_path)
-    final_path
+    return nil unless success
+
+    Dir.glob("#{prefix}-*.jpg").first
 end
 
 get '/preview/?*' do
