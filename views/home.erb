@@ -22,7 +22,7 @@
         </div>
 
         <div class="file-table-wrap">
-            <%= erb :_images, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed } %>
+            <%= erb :_images, locals: { file_tree: @file_tree, key: @key, is_jailed: @is_jailed, read_only: @read_only } %>
         </div>
 
         <%= erb :_modal_base %>
