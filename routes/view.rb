@@ -26,7 +26,7 @@ get '/view/*' do
     @copy = $env.default_copy
     @key = key
     @all_dirs = collect_all_dirs(get_file_tree)
-    @is_jailed = is_public # public visitors shouldn't browse above /public
+    @is_jailed = is_public && !is_logged_in?
     @file_tree = get_file_tree(@key)
     erb :home, locals: {
         copy: @copy,
