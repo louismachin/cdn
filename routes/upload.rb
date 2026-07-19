@@ -83,3 +83,52 @@ post '/upload/?*' do
     content_type 'application/json'
     { :success => true }.to_json
 end
+
+get '/new_folder/?*' do
+    file_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
+    initial_dir = file_path.split('/')[0] if !file_path.empty?
+    is_public = initial_dir == 'public'
+    protected! unless is_public
+    @copy = $env.default_copy
+    @key = file_path.empty? ? [] : file_path.split('/')
+    erb :new_folder, locals: { copy: @copy, key: @key }
+end
+
+post '/new_folder/?*' do
+    directory_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
+    initial_dir = directory_path.split('/')[0] if !directory_path.empty?
+    is_public = initial_dir == 'public'
+    protected! unless is_public
+
+    unless params['name'] && !params['name'].strip.empty?
+        halt 400, {
+            'success' => false,
+            'error' => 'Missing required fields',
+        }.to_json
+    end
+
+    folder_name = params['name'].strip
+
+    # Guard against path traversal / nested paths sneaking in via the name field
+    if folder_name.include?('/') || folder_name.include?('\\') || folder_name == '.' || folder_name == '..'
+        halt 400, {
+            'success' => false,
+            'error' => 'Invalid folder name',
+        }.to_json
+    end
+
+    full_path = directory_path.empty? ? File.join('data', folder_name) : File.join('data', directory_path, folder_name)
+
+    if Dir.exist?(full_path)
+        halt 400, {
+            'success' => false,
+            'error' => 'Folder already exists',
+        }.to_json
+    end
+
+    FileUtils.mkdir_p(full_path)
+
+    clear_file_tree_cache
+    content_type 'application/json'
+    { :success => true }.to_json
+end

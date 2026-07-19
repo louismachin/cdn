@@ -6,11 +6,10 @@
         </tr>
     </thead>
     <tbody>
-
         <%# parent directory row %>
         <% if key.size > 0 && !is_jailed %>
             <%
-                dir    = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
+                dir  = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
                 href = '/view/' + dir
             %>
             <tr>
@@ -23,7 +22,6 @@
                 <td class="col-action"></td>
             </tr>
         <% end %>
-
         <%# directories %>
         <% file_tree.each do |branch| %>
             <% next if branch.is_a?(String) %>
@@ -43,16 +41,15 @@
                 <td class="col-action"></td>
             </tr>
         <% end %>
-
         <%# files %>
         <% file_tree.each do |branch| %>
             <% next unless branch.is_a?(String) %>
             <%
-                all_segments         = key.empty? ? [branch] : key + [branch]
-                encoded                    = all_segments.map { |s| URI.encode_www_form_component(s) }
-                download_href        = '/download/' + encoded.join('/')
-                delete_href            = '/delete/'     + encoded.join('/')
-                info_href                = '/info/'         + encoded.join('/')
+                all_segments  = key.empty? ? [branch] : key + [branch]
+                encoded       = all_segments.map { |s| URI.encode_www_form_component(s) }
+                download_href = '/download/' + encoded.join('/')
+                delete_href   = '/delete/' + encoded.join('/')
+                info_href     = '/info/' + encoded.join('/')
             %>
             <tr>
                 <td class="col-name">
@@ -67,7 +64,6 @@
                 </td>
             </tr>
         <% end %>
-
         <% if file_tree.empty? && (key.size == 0 || is_jailed) %>
             <tr>
                 <td colspan="2" style="padding: 48px 16px; text-align: center; color: #5f6368;">
@@ -75,7 +71,6 @@
                 </td>
             </tr>
         <% end %>
-
     </tbody>
 </table>
 
