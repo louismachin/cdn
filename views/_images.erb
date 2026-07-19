@@ -71,9 +71,11 @@
                     <div class="image-card-footer">
                         <span class="image-name" title="<%= branch %>"><%= branch %></span>
                         <div class="image-actions">
-                            <button class="icon-btn" onclick="showInfo('<%= info_href %>', '<%= branch %>', '<%= size_label %>')" title="Properties">&#9432;</button>
-                            <button class="icon-btn" onclick="showMove('<%= encoded.join('/') %>', '<%= key.join('/') %>', '<%= branch %>')" title="Move">&#8677;</button>
-                            <button class="icon-btn delete" onclick="deleteFile('<%= delete_href %>')" title="Delete">&#128465;</button>
+                            <% unless read_only %>
+                                <button class="icon-btn" onclick="showInfo('<%= info_href %>', '<%= branch %>', '<%= size_label %>')" title="Properties">&#9432;</button>
+                                <button class="icon-btn" onclick="showMove('<%= encoded.join('/') %>', '<%= key.join('/') %>', '<%= branch %>')" title="Move">&#8677;</button>
+                                <button class="icon-btn delete" onclick="deleteFile('<%= delete_href %>')" title="Delete">&#128465;</button>
+                            <% end %>
                         </div>
                     </div>
                 </div>
