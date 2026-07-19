@@ -20,8 +20,8 @@
         </div>
 
         <%= erb :_file_info_modal, locals: {} %>
-        <%= erb :_upload_modal, locals: {} %>
-        <%= erb :_new_folder_modal, locals: {} %>
+        <%= erb :_upload_modal, locals: { key: @key } %>
+        <%= erb :_new_folder_modal, locals: { key: @key } %>
     </div>
 </body>
 </html>
