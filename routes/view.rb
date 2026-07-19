@@ -34,6 +34,6 @@ get '/view/*' do
         key: @key,
         is_jailed: @is_jailed,
         all_dirs: @all_dirs,
-        read_only: !logged_in?, # or however you currently check session state
+        read_only: !is_logged_in?,
     }
 end
