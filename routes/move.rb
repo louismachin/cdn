@@ -8,15 +8,14 @@ post '/move/?*' do
         halt 400, { 'success' => false, 'error' => 'Missing destination' }.to_json
     end
 
-    destination = params['destination'].strip.gsub(/\A\/+|\/+\z/, '') # trim leading/trailing slashes
+    destination = params['destination'].strip.gsub(/\A\/+|\/+\z/, '')
 
-    # Guard against path traversal
     if source_path.split('/').include?('..') || destination.split('/').include?('..')
         halt 400, { 'success' => false, 'error' => 'Invalid path' }.to_json
     end
 
-    from_path = File.join('data', source_path)
-    to_path   = File.join('data', destination)
+    from_path = File.join(APP_ROOT, 'data', source_path)
+    to_path   = File.join(APP_ROOT, 'data', destination)
 
     unless File.exist?(from_path)
         halt 404, { 'success' => false, 'error' => 'File not found' }.to_json
