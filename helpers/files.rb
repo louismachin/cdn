@@ -1,5 +1,14 @@
 DIR_DELIMITER = ';;'
 
+def get_free_space
+    file_path = APP_ROOT + '/data'
+    `df -m #{file_path}`.split(/\b/)[24].to_i
+rescue
+    0
+end
+
+puts "get_free_space=#{get_free_space}"
+
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
     root_files.reject! { |file| file.end_with?('.info') }
