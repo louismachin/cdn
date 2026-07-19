@@ -35,8 +35,19 @@ end
 get '/download/*', &download_file
 get '/dl/*', &download_file
 
+PREVIEW_CACHE_ROOT = File.join(APP_ROOT, 'cache', 'previews')
+
+# Builds a cache-safe filename from the original's relative path, so
+# nested files don't collide (e.g. "public/a/photo.heic" and "private/a/photo.heic")
+def preview_cache_key(original_path)
+    relative = original_path.sub(File.join(APP_ROOT, 'data') + '/', '')
+    relative.gsub('/', '__')
+end
+
 def heic_preview_path(original_path)
-    original_path.sub(/\.heic\z/i, '.preview.jpg')
+    FileUtils.mkdir_p(PREVIEW_CACHE_ROOT)
+    key = preview_cache_key(original_path).sub(/\.heic\z/i, '.jpg')
+    File.join(PREVIEW_CACHE_ROOT, key)
 end
 
 def ensure_heic_preview(original_path)
@@ -48,11 +59,12 @@ def ensure_heic_preview(original_path)
 end
 
 def pdf_preview_path(original_path)
-    original_path.sub(/\.pdf\z/i, '.preview')
+    FileUtils.mkdir_p(PREVIEW_CACHE_ROOT)
+    key = preview_cache_key(original_path).sub(/\.pdf\z/i, '')
+    File.join(PREVIEW_CACHE_ROOT, key) # prefix; pdftoppm appends -1.jpg
 end
 
 def ensure_pdf_preview(original_path)
-    # pdftoppm appends '-1.jpg' itself (page 1), so we pass a prefix
     prefix = pdf_preview_path(original_path)
     final_path = "#{prefix}-1.jpg"
     return final_path if File.exist?(final_path)
