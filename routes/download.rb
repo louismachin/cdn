@@ -34,3 +34,27 @@ end
 
 get '/download/*', &download_file
 get '/dl/*', &download_file
+
+def heic_preview_path(original_path)
+    original_path.sub(/\.heic\z/i, '.preview.jpg')
+end
+
+def ensure_heic_preview(original_path)
+    preview_path = heic_preview_path(original_path)
+    return preview_path if File.exist?(preview_path)
+    system('heif-convert', original_path, preview_path)
+    preview_path
+end
+
+get '/preview/?*' do
+    path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
+    full_path = File.join(APP_ROOT, 'data', path)
+    halt 404 unless File.exist?(full_path)
+
+    if full_path.downcase.end_with?('.heic')
+        preview = ensure_heic_preview(full_path)
+        send_file preview
+    else
+        send_file full_path
+    end
+end

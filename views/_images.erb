@@ -55,16 +55,17 @@
             <% file_tree.each do |branch| %>
                 <% next unless branch.is_a?(String) %>
                 <%
-                    all_segments    = key.empty? ? [branch] : key + [branch]
-                    encoded             = all_segments.map { |s| URI.encode_www_form_component(s) }
+                    all_segments  = key.empty? ? [branch] : key + [branch]
+                    encoded       = all_segments.map { |s| URI.encode_www_form_component(s) }
+                    previewhref   = '/preview/' + encoded.join('/')
                     download_href = '/download/' + encoded.join('/')
-                    delete_href     = '/delete/'     + encoded.join('/')
-                    info_href         = '/info/'         + encoded.join('/')
+                    delete_href   = '/delete/' + encoded.join('/')
+                    info_href     = '/info/' + encoded.join('/')
                 %>
                 <div class="image-card">
                     <a class="image-thumb-link" href="<%= download_href %>">
-                        <img class="image-thumb" src="<%= download_href %>" alt="<%= branch %>" loading="lazy"
-                                 onerror="this.closest('.image-thumb-link').replaceWith(fallbackIcon())">
+                        <img class="image-thumb" src="<%= preview %>" alt="<%= branch %>" loading="lazy"
+                            onerror="this.closest('.image-thumb-link').replaceWith(fallbackIcon())">
                     </a>
                     <div class="image-card-footer">
                         <span class="image-name" title="<%= branch %>"><%= branch %></span>
