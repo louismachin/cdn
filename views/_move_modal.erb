@@ -1,0 +1,76 @@
+<div id="move-pop-up" class="pop-up">
+    <div class="pop-up-header">Move File</div>
+    <div class="pop-up-body">
+        <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px;">Destination folder</label>
+        <select id="moveDestinationDir" class="text-input mb">
+            <option value="">/ (root)</option>
+            <% all_dirs.each do |dir_parts| %>
+                <option value="<%= dir_parts.join('/') %>"><%= ('&nbsp;&nbsp;' * (dir_parts.size - 1)) + dir_parts.last %></option>
+            <% end %>
+        </select>
+        <label style="display:block; font-size:12px; color:var(--text-muted); margin-bottom:4px;">Filename</label>
+        <input type="text" id="moveFilename" class="text-input">
+    </div>
+    <div class="pop-up-footer">
+        <div id="move-status" class="status"></div>
+        <div class="buttons">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" id="moveBtn" onclick="doMove()">Move</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let moveSourcePath = ''
+
+function showMove(sourcePath, currentDirPath, filename) {
+    moveSourcePath = sourcePath
+    document.getElementById('moveDestinationDir').value = currentDirPath
+    document.getElementById('moveFilename').value = filename
+    openModal('move-pop-up')
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && document.getElementById('move-pop-up').classList.contains('show')) doMove()
+})
+
+function doMove() {
+    const dir = document.getElementById('moveDestinationDir').value
+    const filename = document.getElementById('moveFilename').value.trim()
+    if (!filename) return
+
+    const destination = dir ? (dir + '/' + filename) : filename
+
+    const btn = document.getElementById('moveBtn')
+    btn.disabled = true
+    btn.textContent = 'Moving…'
+
+    fetch('/move/' + moveSourcePath, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'destination=' + encodeURIComponent(destination)
+    })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) window.location.reload()
+            else {
+                const s = document.getElementById('move-status')
+                s.textContent = data.error || 'Failed'
+                s.className = 'status error'
+                resetMoveBtn()
+            }
+        })
+        .catch(() => {
+            const s = document.getElementById('move-status')
+            s.textContent = 'Error moving file'
+            s.className = 'status error'
+            resetMoveBtn()
+        })
+}
+
+function resetMoveBtn() {
+    const btn = document.getElementById('moveBtn')
+    btn.disabled = false
+    btn.textContent = 'Move'
+}
+</script>

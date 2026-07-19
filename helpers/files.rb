@@ -103,3 +103,15 @@ end
 def reset_file_info_cache
     $cached_file_info = {}
 end
+
+def collect_all_dirs(tree, prefix = [])
+    dirs = []
+    tree.each do |branch|
+        next if branch.is_a?(String)
+        dir_name = branch.keys[0]
+        full_path = prefix + [dir_name]
+        dirs << full_path
+        dirs.concat(collect_all_dirs(branch[dir_name], full_path))
+    end
+    dirs
+end

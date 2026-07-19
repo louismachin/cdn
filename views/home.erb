@@ -23,6 +23,7 @@
         <%= erb :_file_info_modal, locals: { key: @key } %>
         <%= erb :_upload_modal, locals: { key: @key } %>
         <%= erb :_new_folder_modal, locals: { key: @key } %>
+        <%= erb :_move_modal, locals: { key: @key, all_dirs: @all_dirs } %>
     </div>
 </body>
 </html>

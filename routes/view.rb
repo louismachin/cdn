@@ -3,12 +3,14 @@ get '/view' do
     @copy = $env.default_copy
     @key = []
     @file_tree = get_file_tree(@key)
+    @all_dirs = collect_all_dirs(get_file_tree)
     @is_jailed = false
     erb :home, locals: {
         copy: @copy,
         file_tree: @file_tree,
         key: @key,
         is_jailed: @is_jailed,
+        all_dirs: @all_dirs,
     }
 end
 

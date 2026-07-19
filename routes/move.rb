@@ -1,3 +1,39 @@
+post '/move/?*' do
+    source_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
+    initial_dir = source_path.split('/')[0] if !source_path.empty?
+    is_public = initial_dir == 'public'
+    protected! unless is_public
+
+    unless params['destination'] && !params['destination'].strip.empty?
+        halt 400, { 'success' => false, 'error' => 'Missing destination' }.to_json
+    end
+
+    destination = params['destination'].strip.gsub(/\A\/+|\/+\z/, '') # trim leading/trailing slashes
+
+    # Guard against path traversal
+    if source_path.split('/').include?('..') || destination.split('/').include?('..')
+        halt 400, { 'success' => false, 'error' => 'Invalid path' }.to_json
+    end
+
+    from_path = File.join('data', source_path)
+    to_path   = File.join('data', destination)
+
+    unless File.exist?(from_path)
+        halt 404, { 'success' => false, 'error' => 'File not found' }.to_json
+    end
+
+    if File.exist?(to_path)
+        halt 400, { 'success' => false, 'error' => 'A file already exists at the destination' }.to_json
+    end
+
+    FileUtils.mkdir_p(File.dirname(to_path))
+    FileUtils.mv(from_path, to_path)
+
+    clear_file_tree_cache
+    content_type 'application/json'
+    { 'success' => true }.to_json
+end
+
 get '/delete/*' do
     file_path = URI.decode_www_form_component(params['splat'][0])
     full_path = File.join('data', file_path)

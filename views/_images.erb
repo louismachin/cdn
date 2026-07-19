@@ -11,7 +11,7 @@
                 <%# parent directory row %>
                 <% if key.size > 0 && !is_jailed %>
                     <%
-                        dir    = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
+                        dir  = key[0..-2].map { |k| URI.encode_www_form_component(k) }.join('/')
                         href = '/view/' + dir
                     %>
                     <tr>
@@ -70,6 +70,7 @@
                         <span class="image-name" title="<%= branch %>"><%= branch %></span>
                         <div class="image-actions">
                             <button class="icon-btn" onclick="showInfo('<%= info_href %>')" title="Properties">&#9432;</button>
+                            <button class="icon-btn" onclick="showMove('<%= encoded.join('/') %>', '<%= all_segments.join('/') %>')" title="Move">&#8677;</button>
                             <button class="icon-btn delete" onclick="deleteFile('<%= delete_href %>')" title="Delete">&#128465;</button>
                         </div>
                     </div>
