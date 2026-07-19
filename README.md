@@ -1,3 +1,17 @@
+# Dependancies
+
+heif-convert
+
+```
+sudo apt install libheif-examples
+```
+
+pdftoppm
+
+```
+sudo apt install poppler-utils
+```
+
 # API Endpoints
 
 ## List Files

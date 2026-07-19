@@ -42,8 +42,24 @@ end
 def ensure_heic_preview(original_path)
     preview_path = heic_preview_path(original_path)
     return preview_path if File.exist?(preview_path)
-    system('heif-convert', original_path, preview_path)
+    success = system('heif-convert', original_path, preview_path)
+    return nil unless success && File.exist?(preview_path)
     preview_path
+end
+
+def pdf_preview_path(original_path)
+    original_path.sub(/\.pdf\z/i, '.preview')
+end
+
+def ensure_pdf_preview(original_path)
+    # pdftoppm appends '-1.jpg' itself (page 1), so we pass a prefix
+    prefix = pdf_preview_path(original_path)
+    final_path = "#{prefix}-1.jpg"
+    return final_path if File.exist?(final_path)
+
+    success = system('pdftoppm', '-jpeg', '-f', '1', '-l', '1', '-scale-to', '600', original_path, prefix)
+    return nil unless success && File.exist?(final_path)
+    final_path
 end
 
 get '/preview/?*' do
@@ -51,10 +67,15 @@ get '/preview/?*' do
     full_path = File.join(APP_ROOT, 'data', path)
     halt 404 unless File.exist?(full_path)
 
-    if full_path.downcase.end_with?('.heic')
-        preview = ensure_heic_preview(full_path)
-        send_file preview
-    else
-        send_file full_path
-    end
+    preview =
+        if full_path.downcase.end_with?('.heic')
+            ensure_heic_preview(full_path)
+        elsif full_path.downcase.end_with?('.pdf')
+            ensure_pdf_preview(full_path)
+        else
+            full_path
+        end
+
+    halt 500, 'Preview conversion failed' unless preview
+    send_file preview
 end
