@@ -7,11 +7,11 @@
             <div class="toolbar-left">
                 <span class="wordmark"><!-- <%= @copy[:title] %> --></span>
                 <%= erb :_breadcrumb, locals: { key: @key } rescue '' %>
+                <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
             </div>
             <div class="buttons">
-                <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
-                <button class="btn btn-primary" onclick="showUpload()">&#8593; Upload</button>
                 <button class="btn btn-secondary" onclick="showNewFolder()">New Folder</button>
+                <button class="btn btn-primary" onclick="showUpload()">&#8593; Upload</button>
             </div>
         </div>
 

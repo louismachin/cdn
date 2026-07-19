@@ -1,14 +1,3 @@
-get '/upload/?*' do
-    file_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
-    initial_dir = file_path.split('/')[0] if !file_path.empty?
-    is_public = initial_dir == 'public'
-    protected! unless is_public
-    
-    @copy = $env.default_copy
-    @key = file_path.empty? ? [] : file_path.split('/')
-    erb :upload, locals: { copy: @copy, key: @key }
-end
-
 post '/upload_text/?*' do
     directory_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
     initial_dir = directory_path.split('/')[0] if !directory_path.empty?
@@ -82,16 +71,6 @@ post '/upload/?*' do
     clear_file_tree_cache
     content_type 'application/json'
     { :success => true }.to_json
-end
-
-get '/new_folder/?*' do
-    file_path = params['splat'] ? URI.decode_www_form_component(params['splat'][0]) : ''
-    initial_dir = file_path.split('/')[0] if !file_path.empty?
-    is_public = initial_dir == 'public'
-    protected! unless is_public
-    @copy = $env.default_copy
-    @key = file_path.empty? ? [] : file_path.split('/')
-    erb :new_folder, locals: { copy: @copy, key: @key }
 end
 
 post '/new_folder/?*' do
