@@ -1,13 +1,25 @@
 DIR_DELIMITER = ';;'
 
-def get_free_space
+def disk_space
     file_path = APP_ROOT + '/data'
-    `df -m #{file_path}`.split(/\b/)[24].to_i
+    output = `df -m #{file_path}`
+    # df -m output:
+    # Filesystem  1M-blocks  Used  Available  Use%  Mounted on
+    lines = output.strip.split("\n")
+    return { used: 0, free: 0 } if lines.size < 2
+
+    fields = lines[1].split(/\s+/)
+    used_mb = fields[2].to_i
+    free_mb = fields[3].to_i
+
+    { used: used_mb, free: free_mb }
 rescue
-    0
+    { used: 0, free: 0 }
 end
 
-puts "get_free_space=#{get_free_space}"
+space = disk_space
+puts "User: #{space[:used]}"
+puts "Free: #{space[:free]}"
 
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
