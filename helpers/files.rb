@@ -24,22 +24,28 @@ puts "Free: #{space[:free]}"
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
     root_files.reject! { |file| file.end_with?('.info') }
+
     nested_files = files.select { |file| file.include?('/') }
     nested_files.reject! { |file| file.end_with?('.info') }
+
     result = root_files.dup
     grouped = nested_files.group_by { |file| file.split('/')[0] }
+
     grouped.each do |dir, files_in_dir|
         remaining_paths = files_in_dir.map do |file|
             parts = file.split('/')
             parts[1..-1].join('/')
         end.reject(&:empty?)
+
         if remaining_paths.any? { |path| path.include?('/') }
             dir_contents = array_to_nested_structure(remaining_paths)
         else
             dir_contents = remaining_paths
         end
+
         result << { dir => dir_contents }
     end
+
     return result
 end
 
@@ -49,6 +55,28 @@ def get_branch(tree, dir)
         return branch[dir] if branch.keys[0] == dir
     end
     return []
+end
+
+# Walks the real filesystem and merges any directories with no files
+# (which array_to_nested_structure can never see, since it only infers
+# folders from file paths) into the tree built from files.
+def merge_empty_dirs(tree, base_path)
+    return tree unless Dir.exist?(base_path)
+
+    Dir.entries(base_path).each do |entry|
+        next if entry == '.' || entry == '..'
+        full_path = File.join(base_path, entry)
+        next unless File.directory?(full_path)
+
+        existing_branch = tree.find { |b| b.is_a?(Hash) && b.keys[0] == entry }
+        if existing_branch
+            existing_branch[entry] = merge_empty_dirs(existing_branch[entry], full_path)
+        else
+            tree << { entry => merge_empty_dirs([], full_path) }
+        end
+    end
+
+    tree
 end
 
 $cached_file_tree = nil
@@ -61,11 +89,12 @@ def get_file_tree(key = nil)
     if $cached_file_tree && (!$cached_file_tree.expired?)
         tree = $cached_file_tree.data.clone
     else
-        arr = Dir[APP_ROOT + '/data/**/*.*']
-            .map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
+        arr = Dir[APP_ROOT + '/data/**/*.*'].map { |dir| dir.gsub(APP_ROOT + '/data/', '') }
         tree = array_to_nested_structure(arr)
+        tree = merge_empty_dirs(tree, APP_ROOT + '/data')
         $cached_file_tree = Cache.new(Time.now, tree, 3600)
     end
+
     unless key.nil?
         key.each do |dir|
             branch = get_branch(tree, dir)
@@ -73,6 +102,7 @@ def get_file_tree(key = nil)
             tree = branch
         end
     end
+
     return tree
 end
 
@@ -114,11 +144,4 @@ def collect_all_dirs(tree, prefix = [])
         dirs.concat(collect_all_dirs(branch[dir_name], full_path))
     end
     dirs
-end
-
-def collect_all_dirs_from_disk(base = APP_ROOT + '/data')
-    Dir.glob(File.join(base, '**', '*'))
-       .select { |path| File.directory?(path) }
-       .map { |path| path.sub(base + '/', '').split('/') }
-       .sort
 end
