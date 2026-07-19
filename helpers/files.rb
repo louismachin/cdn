@@ -115,3 +115,10 @@ def collect_all_dirs(tree, prefix = [])
     end
     dirs
 end
+
+def collect_all_dirs_from_disk(base = APP_ROOT + '/data')
+    Dir.glob(File.join(base, '**', '*'))
+       .select { |path| File.directory?(path) }
+       .map { |path| path.sub(base + '/', '').split('/') }
+       .sort
+end
