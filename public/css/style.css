@@ -264,6 +264,24 @@ input[type="file"] { display: none; }
   justify-content: space-between;
 }
 
+/* ── form inputs ── */
+.text-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface);
+  transition: border-color 0.1s;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 /* ── kv table ── */
 .kv-table {
   width: 100%;
