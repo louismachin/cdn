@@ -57,14 +57,14 @@
                 <%
                     all_segments  = key.empty? ? [branch] : key + [branch]
                     encoded       = all_segments.map { |s| URI.encode_www_form_component(s) }
-                    previewhref   = '/preview/' + encoded.join('/')
+                    preview_href   = '/preview/' + encoded.join('/')
                     download_href = '/download/' + encoded.join('/')
                     delete_href   = '/delete/' + encoded.join('/')
                     info_href     = '/info/' + encoded.join('/')
                 %>
                 <div class="image-card">
                     <a class="image-thumb-link" href="<%= download_href %>">
-                        <img class="image-thumb" src="<%= preview %>" alt="<%= branch %>" loading="lazy"
+                        <img class="image-thumb" src="<%= preview_href %>" alt="<%= branch %>" loading="lazy"
                             onerror="this.closest('.image-thumb-link').replaceWith(fallbackIcon())">
                     </a>
                     <div class="image-card-footer">
