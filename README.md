@@ -1,4 +1,4 @@
-# Dependancies
+# Dependencies
 
 heif-convert
 
