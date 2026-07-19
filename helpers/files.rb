@@ -145,3 +145,35 @@ def collect_all_dirs(tree, prefix = [])
     end
     dirs
 end
+
+# Converts a byte count into a short human-readable string, e.g. 1536 -> "1.5 KB"
+def human_file_size(bytes)
+    return '0 B' if bytes.nil? || bytes <= 0
+
+    units = ['B', 'KB', 'MB', 'GB', 'TB']
+    size = bytes.to_f
+    unit_index = 0
+
+    while size >= 1024 && unit_index < units.length - 1
+        size /= 1024
+        unit_index += 1
+    end
+
+    if unit_index == 0
+        "#{size.to_i} #{units[unit_index]}"
+    else
+        "#{format('%.1f', size)} #{units[unit_index]}"
+    end
+end
+
+# Builds the on-disk path for a file given its path segments (e.g. ['public', 'photos', 'foo.jpg'])
+def file_disk_path(segments)
+    File.join(APP_ROOT, 'data', *segments)
+end
+
+# Returns a human-readable size label for a file given its path segments, or nil if it doesn't exist
+def file_size_label(segments)
+    path = file_disk_path(segments)
+    return nil unless File.file?(path)
+    human_file_size(File.size(path))
+end
