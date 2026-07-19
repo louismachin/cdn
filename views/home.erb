@@ -5,9 +5,9 @@
     <div id="page">
         <div class="toolbar">
             <div class="toolbar-left">
+                <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
                 <span class="wordmark"><!-- <%= @copy[:title] %> --></span>
                 <%= erb :_breadcrumb, locals: { key: @key } rescue '' %>
-                <button class="btn btn-ghost" onclick="window.location = '/logout'">Logout</button>
             </div>
             <div class="buttons">
                 <button class="btn btn-secondary" onclick="showNewFolder()">New Folder</button>
