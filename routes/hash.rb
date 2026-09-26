@@ -14,7 +14,7 @@ get '/hash/*' do
     if File.file?(full_path)
         stat = File.stat(full_path)
         {
-            path:        relative,
+            path:        full_path,
             name:        File.basename(full_path),
             size:        stat.size,
             mime_type:   Rack::Mime.mime_type(File.extname(full_path), 'application/octet-stream'),
