@@ -9,7 +9,7 @@ helpers do
         if api_key
             $env.check_api_key(api_key)
         elsif cookie
-        $   env.check_cookie(cookie)
+            $env.check_cookie(cookie)
         else
             false
         end
