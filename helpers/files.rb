@@ -177,3 +177,17 @@ def file_size_label(segments)
     return nil unless File.file?(path)
     human_file_size(File.size(path))
 end
+
+$cached_digests = {}
+
+# SHA-256 of a file's contents, cached until its size or mtime changes
+def file_sha256(path)
+    stat = File.stat(path)
+    key  = [stat.size, stat.mtime.to_r]
+    cached = $cached_digests[path]
+    return cached[:sha256] if cached && cached[:key] == key
+
+    sha = Digest::SHA256.file(path).hexdigest
+    $cached_digests[path] = { key: key, sha256: sha }
+    sha
+end
