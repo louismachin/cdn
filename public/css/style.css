@@ -24,7 +24,7 @@
 }
 
 body {
-    background-image: url('/images/light_marble_white.jpg');
+    background-image: url('/images/background.jpg');
     background-repeat: repeat;
     min-height: 100vh;
     padding: var(--large-padding);
@@ -42,7 +42,8 @@ section {
     padding: var(--padding);
 }
 
-.column { display: flex; flex-direction: column; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-row { display: flex; flex-direction: row; }
 .gap { gap: var(--padding); }
 .mt { margin-top: var(--padding); }
 .mb { margin-bottom: var(--padding); }

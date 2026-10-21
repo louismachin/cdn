@@ -3,7 +3,11 @@
 <%= erb :_head %>
 <body class="centered">
     <section>
-        <div class="column gap">
+        <div class="flex-col gap">
+            <div class="flex-col" style="align-items: center; gap: var(--padding);">
+                <img src="/images/search.gif" style="object-fit: none; height: 100%;">
+                <p>Welcome to Louis' CDN!</p>
+            </div>
             <input id="username" placeholder="Username" autocomplete="username">
             <input id="password" placeholder="Password" type="password" autocomplete="current-password">
         </div>
