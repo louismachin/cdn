@@ -17,10 +17,6 @@ rescue
     { used: 0, free: 0 }
 end
 
-space = disk_space
-puts "Used: #{space[:used]}"
-puts "Free: #{space[:free]}"
-
 def array_to_nested_structure(files)
     root_files = files.select { |file| !file.include?('/') }
     root_files.reject! { |file| file.end_with?('.info') }

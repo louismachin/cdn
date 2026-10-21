@@ -13,7 +13,7 @@ configure do
     set :port, $env.port
     set :public_folder, File.join(APP_ROOT, 'public')
     set :views, File.join(APP_ROOT, 'views')
-#   set :environment, :production
+    set :environment, :production
     disable :protection
 end
 

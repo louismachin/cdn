@@ -14,3 +14,9 @@ get '/robots.txt' do
         Disallow: /
     ROBOTS
 end
+
+get '/disk_space.json' do
+    content_type :json
+    space = disk_space
+    { used: space[:used], free: space[:free] }.to_json
+end
