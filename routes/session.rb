@@ -21,8 +21,7 @@ helpers do
 end
 
 get '/login' do
-    @copy = $env.default_copy
-    erb :login, { copy: @copy }
+    erb :login
 end
 
 post '/login' do

@@ -7,18 +7,24 @@
     <div class="pop-up-footer">
         <div id="status" class="status"></div>
         <div class="buttons">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="saveInfo()">Save</button>
+            <button class="blink" onclick="moveCurrent()" title="Move">Move</button>
+            <button class="rlink" onclick="deleteCurrent()" title="Delete">Delete</button>
+            <button class="ylink" onclick="closeModal()">Cancel</button>
+            <button class="glink" onclick="saveInfo()">Save</button>
         </div>
     </div>
 </div>
 
 <script>
-    let currentUri = ''
+    let currentUri  = ''
+    let currentPath = '' // e.g. "public/images/cat.png"
     let data = {}
 
-    let showInfo = (uri, filename, size) => {
-        currentUri = uri
+    const encodePath = p => p.split('/').map(encodeURIComponent).join('/')
+
+    let showInfo = (uri, filename, size, path) => {
+        currentUri  = uri
+        currentPath = path
         document.getElementById('popup-file-meta').innerHTML = `
             <div class="file-meta-name">${filename}</div>
             <div class="file-meta-size">${size || 'Unknown size'}</div>`
@@ -30,6 +36,28 @@
             .catch(() => { document.getElementById('popup-content').innerHTML = '<p style="color:#d93025;font-size:13px">Error loading data.</p>' })
     }
 
+    let deleteFile = (uri) => {
+        if (!confirm('Delete this file?')) return
+        fetch(uri, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
+            .then(r => {
+                if (r.ok) window.location.reload()
+                else alert('Error deleting file.')
+            })
+            .catch(() => alert('Error deleting file.'))
+    }
+
+    let deleteCurrent = () => {
+        if (!currentPath) return
+        deleteFile('/delete/' + encodePath(currentPath))
+    }
+
+    let moveCurrent = () => {
+        if (!currentPath) return
+        const parts = currentPath.split('/')
+        const name  = parts.pop()
+        showMove(encodePath(currentPath), parts.join('/'), name)
+    }
+
     let renderTable = () => {
         let rows = ''
         for (let key in data) {
@@ -37,14 +65,14 @@
                 <tr>
                     <td><input type="text" value="${key}" onchange="updateKey('${key}', this.value)"></td>
                     <td><input type="text" value="${data[key]}" onchange="updateValue('${key}', this.value)"></td>
-                    <td><button class="remove-btn" onclick="removeRow('${key}')">×</button></td>
+                    <td><button class="rlink" onclick="removeRow('${key}')">Remove</button></td>
                 </tr>`
         }
         rows += `
             <tr>
                 <td><input type="text" id="newKey" placeholder="key"></td>
                 <td><input type="text" id="newValue" placeholder="value"></td>
-                <td><button class="add-btn" onclick="addRow()">+</button></td>
+                <td><button class="blink" onclick="addRow()">Add</button></td>
             </tr>`
 
         document.getElementById('popup-content').innerHTML = `
@@ -92,24 +120,3 @@
         })
     }
 </script>
-
-<style>
-.file-meta {
-    padding-bottom: 12px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-}
-
-.file-meta-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    word-break: break-all;
-}
-
-.file-meta-size {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 2px;
-}
-</style>

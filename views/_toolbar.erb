@@ -1,0 +1,17 @@
+<div class="toolbar <%= classes if defined?(classes) %>">
+    <div class="toolbar-left">
+        <% unless read_only %>
+            <button class="rlink" onclick="window.location = '/logout'">Logout</button>
+        <% else %>
+            <button class="glink" onclick="window.location = '/login'">Login</button>
+        <% end %>
+        <span class="wordmark"><!-- <%= @copy[:title] %> --></span>
+        <%= erb :_breadcrumb, locals: { key: key } rescue '' %>
+    </div>
+    <div class="buttons">
+        <% unless read_only %>
+            <button class="ylink" onclick="showNewFolder()">New Folder</button>
+            <button class="blink" onclick="showUpload()">&#8593; Upload</button>
+        <% end %>
+    </div>
+</div>

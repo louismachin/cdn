@@ -4,8 +4,7 @@ get '/' do
 end
 
 get '/help' do
-    @copy = $env.default_copy
-    erb :help, locals: { copy: @copy }
+    erb :help
 end
 
 get '/robots.txt' do

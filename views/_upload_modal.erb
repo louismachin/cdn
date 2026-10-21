@@ -11,8 +11,8 @@
     <div class="pop-up-footer">
         <div id="upload-status" class="status"></div>
         <div class="buttons">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" id="uploadBtn" onclick="doUpload()" disabled>Upload</button>
+            <button class="rlink" onclick="closeModal()">Cancel</button>
+            <button class="glink" id="uploadBtn" onclick="doUpload()" disabled>Upload</button>
         </div>
     </div>
 </div>
@@ -117,74 +117,3 @@ async function doUpload() {
     }
 }
 </script>
-
-<style>
-.selected-file-list {
-  list-style: none;
-  max-height: 240px;
-  overflow-y: auto;
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.selected-file-list:empty {
-  display: none;
-}
-
-.selected-file-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font-size: 13px;
-}
-
-.selected-file-icon {
-  font-size: 16px;
-  flex-shrink: 0;
-  width: 20px;
-  text-align: center;
-}
-
-.selected-file-name {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--text);
-}
-
-.selected-file-size {
-  font-size: 11px;
-  color: var(--text-muted);
-  flex-shrink: 0;
-}
-
-.selected-file-remove {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-muted);
-  font-size: 14px;
-  padding: 2px 4px;
-  border-radius: 4px;
-  line-height: 1;
-  flex-shrink: 0;
-}
-.selected-file-remove:hover {
-  color: var(--danger);
-  background: #fce8e6;
-}
-
-.selected-file-summary {
-  padding: 8px 10px;
-  font-size: 12px;
-  color: var(--text-muted);
-  text-align: center;
-}
-</style>

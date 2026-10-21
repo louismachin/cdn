@@ -1,0 +1,84 @@
+.upload-wrap {
+    display: flex;
+    flex-direction: column;
+    border: var(--border-width) double var(--border);
+    padding: var(--padding);
+}
+
+.drop-zone {
+    border: 2px dashed var(--border);
+    padding: var(--padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    padding: var(--large-padding);
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+}
+
+.drop-zone .drop-icon { line-height: 1; margin-bottom: var(--small-padding); }
+
+input[type="file"] { display: none; }
+
+.selected-file {
+    display: none;
+}
+
+.selected-file-list {
+    list-style: none;
+    overflow-y: auto;
+    margin-top: var(--small-padding);
+    display: flex;
+    flex-direction: column;
+    gap: var(--small-padding);
+}
+
+.selected-file-list:empty {
+    display: none;
+}
+
+.selected-file-item {
+    display: flex;
+    align-items: center;
+    gap: var(--padding);
+    padding: var(--small-padding);
+    border: 1px solid var(--border);
+}
+
+.selected-file-icon {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.selected-file-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-size {
+    flex-shrink: 0;
+}
+
+.selected-file-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--small-padding);
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.selected-file-remove:hover {
+    color: var(--bad);
+}
+
+.selected-file-summary {
+    padding: var(--padding);
+    text-align: center;
+}

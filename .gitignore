@@ -2,3 +2,4 @@ environment.yml
 Gemfile.lock
 data
 cache
+.DS_Store
