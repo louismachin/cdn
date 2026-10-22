@@ -26,8 +26,8 @@
         currentUri  = uri
         currentPath = path
         document.getElementById('popup-file-meta').innerHTML = `
-            <div class="file-meta-name">${filename}</div>
-            <div class="file-meta-size">${size || 'Unknown size'}</div>`
+            <div class="file-meta-name"><b>File name</b><br>${filename}</div>
+            <div class="file-meta-size"><b>File size</b><br>${size || 'Unknown size'}</div>`
         document.getElementById('popup-content').innerHTML = '<p style="color:#5f6368;font-size:13px">Loading…</p>'
         openModal('info-pop-up')
         fetch(uri)

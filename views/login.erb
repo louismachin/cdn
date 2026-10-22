@@ -8,11 +8,11 @@
                 <img src="/images/search.gif" style="object-fit: none; height: 100%;">
                 <p>Welcome to Louis' CDN!</p>
             </div>
-            <input id="username" placeholder="Username" autocomplete="username">
-            <input id="password" placeholder="Password" type="password" autocomplete="current-password">
+            <input id="username" style="border: var(--border-width) ridge var(--border);" placeholder="Username" autocomplete="username">
+            <input id="password" style="border: var(--border-width) ridge var(--border);" placeholder="Password" type="password" autocomplete="current-password">
         </div>
         <div id="login-error" class="mt" style="color: var(--bad);"></div>
-        <div class="buttons mt">
+        <div class="buttons mt" style="justify-content: center;">
             <button class="blink" onclick="window.location = '/help'">Help</button>
             <button class="glink" onclick="submitAttempt()">Log in</button>
         </div>

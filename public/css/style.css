@@ -5,7 +5,7 @@
     --accent:         #1a73e8;
     --good:           #188038;
     --bad:            #d93025;
-    --page-width:     640px;
+    --page-width:     800px;
     --radius:         6px;
     --border-width:   4px;
     --padding:        16px;
@@ -111,19 +111,6 @@ input {
 
 .file-icon { font-size: 16px; flex-shrink: 0; }
 
-/* icon action buttons — visible on row hover */
-.icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    padding: var(--padding);
-    line-height: 1;
-}
-
-.icon-btn:hover { background: var(--border); color: var(--text); }
-.icon-btn.delete:hover { background: #fce8e6; color: var(--bad); }
-
 /* ── overlay & popup ── */
 
 
@@ -139,17 +126,15 @@ input {
 }
 
 /* ── kv table ── */
-.kv-table { width: 100%; }
+.kv-table {
+    margin: 0 var(--small-padding);
+}
 
 .kv-table th {
-    text-transform: uppercase;
-    color: var(--text-muted);
-    padding: 0 var(--small-padding) var(--small-padding);
-    text-align: left;
+    text-align: center;
 }
 
 .kv-table td {
-    border-top: 1px solid var(--border);
     padding: var(--small-padding);
 }
 
@@ -221,7 +206,8 @@ input {
     padding: var(--padding);
     border-top: var(--border-width) double var(--border);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: space-between;
     gap: var(--small-padding);
     min-width: 0;
@@ -247,9 +233,8 @@ input {
 /* _file_info_modal.erb */
 
 .file-meta {
-    padding-bottom: var(--padding);
+    padding: var(--padding);
     margin-bottom: var(--padding);
-    border-bottom: var(--border-width) double var(--border);
 }
 
 .file-meta-name {
